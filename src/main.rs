@@ -1,24 +1,32 @@
-use rug::Integer;
+use rug::{Integer, ops::Pow};
 
-fn main() {
-    println!("Hello, world!");
+
+struct AKS {
+    n : Integer,
+    log2n : Integer
 }
 
-fn log2(n : Integer){
-
-}
-
-// nat log: https://stackoverflow.com/questions/70688941/how-to-calculate-integer-logarithm-of-base-3-using-fast-bit-operations
-
-fn is_perfect_power(n : u64) -> bool{
-    let epsilon  = f64::EPSILON;
-    let n_float = n as f64;
-    
-    for b in 2..=n.log2() {
-        let a = n_float.powf(1.0/(b as f64));
-        if(a - a.floor()) < epsilon  {return true};
+impl AKS {
+    fn new(n : usize) -> AKS{
+        let n = Integer::from(n);
+        AKS{
+            n,
+            log2n: Integer::from(n.significant_bits() - 1)
+        }
     }
-    false
+
+    fn run(&self)-> bool {
+        if self.n.is_perfect_power() {return false}    
+        true
+    }
+
+    fn get_r(&self){
+        let max_k = self.log2n.clone().pow(2);
+        let max_r = self.log2n.clone().pow(5).max(Integer::from(3));
+        let mut next_r = true;
+        
+        
+    }
 }
 
 // fn get_r(n : u64){
@@ -32,6 +40,17 @@ fn is_perfect_power(n : u64) -> bool{
 //             next_r = 1;
 //         }
 //     }
+
+fn main() {
+    println!("Hello, world!");
+}
+
+
+// nat log: https://stackoverflow.com/questions/70688941/how-to-calculate-integer-logarithm-of-base-3-using-fast-bit-operations
+
+
+
+
 
 
 // }
