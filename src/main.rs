@@ -1,4 +1,4 @@
-use rug::{Integer, ops::Pow};
+use rug::{Integer, ops::Pow, Complete};
 
 
 struct AKS {
@@ -21,9 +21,19 @@ impl AKS {
     }
 
     fn get_r(&self){
-        let max_k = self.log2n.clone().pow(2);
-        let max_r = self.log2n.clone().pow(5).max(Integer::from(3));
+        let max_k = (&self.log2n).pow(2).complete();
+        let max_r = (&self.log2n).pow(5).complete().max(Integer::from(3 as u8));
+        max_k.
         let mut next_r = true;
+        let r = Integer::from(2 as u8);
+        while r <= max_r && next_r {
+            next_r = false;
+            let mut k = Integer::from(1 as u8);
+            while k <= max_k && !next_r {
+                next_r = ((&self.n).pow_mod(&k, &r).unwrap()==Integer::from(2 as u8))
+            }
+
+        }
         
         
     }
