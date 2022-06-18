@@ -90,8 +90,19 @@ impl Integer {
 
     fn x_pow_k_eq_n(n : u32, x : u32, k : u32) -> bool{
         let f = Integer::logk((2*n).into());
-        if x==1{return false}
-
+        if x==1{
+            return n == 1;
+        }
+        let mut b = 1;
+        let exp = 2^b;
+        let mut x_pow_k_eq_r;
+        while b < f {
+            let r = Integer::pow_2(b, x, k);
+            x_pow_k_eq_r = Integer::x_pow_k_eq_n(n, r, k);
+            if n % exp != r {return false}
+            b = (2*b).min(f);
+        }
+        x_pow_k_eq_r 
     }
 
     fn is_kth_power(n : u32, k : u32, y : u32) -> bool{
@@ -99,8 +110,9 @@ impl Integer {
         let b = f / k;
         let r = Integer::nroot(y, b, k);
         if k == 2 && r == 0 {return false}
-
-        false 
+        if Integer::x_pow_k_eq_n(n, r, k) {return true}
+        if k == 2 {return Integer::x_pow_k_eq_n(n, (2^b) - r, k)}
+        false
     }
 
 
@@ -108,13 +120,10 @@ impl Integer {
     pub fn is_perfect_power(&self) -> bool{
         let f = Integer::logk(2*self.n);
         let y = Integer::nroot(f/2 + 1, self.n as u32, 1);
-        for s in Sieve::new(f.into()){
-            let x = 
-
+        for p in Sieve::new(f.into()){
+            if Integer::is_kth_power(self.n as u32, p as u32, y) {return true}
         }
-        true
-
-
+        false 
     }
 
 
