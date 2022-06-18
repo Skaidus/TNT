@@ -1,41 +1,39 @@
-use rug::{Integer, ops::Pow, Complete};
-
+use rug::{ops::Pow, Complete, Integer};
 
 struct AKS {
-    n : Integer,
-    log2n : Integer
+    n: Integer,
+    log2n: Integer,
 }
 
 impl AKS {
-    fn new(n : usize) -> AKS{
+    fn new(n: usize) -> AKS {
         let n = Integer::from(n);
-        AKS{
+        AKS {
             n,
-            log2n: Integer::from(n.significant_bits() - 1)
+            log2n: Integer::from(n.significant_bits() - 1),
         }
     }
 
-    fn run(&self)-> bool {
-        if self.n.is_perfect_power() {return false}    
+    fn run(&self) -> bool {
+        if self.n.is_perfect_power() {
+            return false;
+        }
         true
     }
 
-    fn get_r(&self){
+    fn get_r(&self) {
         let max_k = (&self.log2n).pow(2).complete();
         let max_r = (&self.log2n).pow(5).complete().max(Integer::from(3 as u8));
-        max_k.
+
         let mut next_r = true;
         let r = Integer::from(2 as u8);
         while r <= max_r && next_r {
             next_r = false;
             let mut k = Integer::from(1 as u8);
             while k <= max_k && !next_r {
-                next_r = ((&self.n).pow_mod(&k, &r).unwrap()==Integer::from(2 as u8))
+                next_r = ((&self.n).pow_mod(&k, &r).unwrap() == Integer::from(2 as u8))
             }
-
         }
-        
-        
     }
 }
 
@@ -55,13 +53,7 @@ fn main() {
     println!("Hello, world!");
 }
 
-
 // nat log: https://stackoverflow.com/questions/70688941/how-to-calculate-integer-logarithm-of-base-3-using-fast-bit-operations
-
-
-
-
-
 
 // }
 
