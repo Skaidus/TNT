@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-
+const TWO : u64 = 2;
 struct Sieve {
     composites: HashMap<u64, Vec<u64>>,
     current: u64,
@@ -46,7 +46,7 @@ impl Iterator for Sieve {
 
 pub struct Integer {
     n: u64,
-    logn: u32,
+//    logn: u32,
 }
 
 impl Integer {
@@ -54,24 +54,38 @@ impl Integer {
         if n == 0 {
             panic!("Tested number can't be lower than 1 ")
         }
-        let logn = Integer::logk(n);
-        Integer { n, logn }
+        //let logn = Integer::logk(n);
+        Integer { n
+            //, logn 
+        }
     }
 
-    fn logk(k: u64) -> u32 {
-        64 - k.leading_zeros() - 1
+    fn ceil_div(p : u64, q : u64)->u64{
+        p/q + if p % q !=0 {1} else {0}
     }
 
-    fn mul_2(b: u32, m: u32, k: u32) -> u32 {
-        (k * m) % (2 ^ b)
+    fn pow(x : u64, y : u64) -> u64{
+        if y == 0 {return 1}
+        let temp = Integer::pow(x, y/2);
+        if y % 2 == 0 { return temp * temp}
+        x * temp * temp
     }
 
-    fn pow_2(b: u32, m: u32, k: u32) -> u32 {
-        (m ^ k) % (2 ^ b)
+    fn logk(k: u64) -> u64 {
+        (64 - k.leading_zeros() - 1).into()
     }
 
-    fn div_2(b: u32, m: u32, k: u32) -> u32 {
-        let exp = 2 ^ b;
+    fn mul_2(b: u64, m: u64, k: u64) -> u64 {
+        println!("{}*{}%2^{}",k,m,b);
+        (k * m) % (Integer::pow(2, b))
+    }
+
+    fn pow_2(b: u64, m: u64, k: u64) -> u64 {
+        (Integer::pow(m, k)) % (Integer::pow(2, b))
+    }
+
+    fn div_2(b: u64, m: u64, k: u64) -> u64 {
+        let exp = Integer::pow(2, b);
         for d in 0..exp - 1 {
             if m == Integer::pow_2(b, d, k) {
                 return d;
@@ -80,17 +94,17 @@ impl Integer {
         return exp - 1;
     }
 
-    fn nroot(y: u32, b: u32, k: u32) -> u32 {
+    fn nroot(b: u64, y: u64, k: u64) -> u64 {
         if b == 1 {
             return 1;
         }
-        let z = Integer::nroot(y, b / 2, k);
+        let z = Integer::nroot(Integer::ceil_div(b , 2), y, k);
         let r2 = Integer::mul_2(b, z, k + 1);
-        let r3 = y * Integer::pow_2(b, z, k + 1);
+        let r3 = (y * Integer::pow_2(b, z, k + 1)) % (2^b);
         Integer::div_2(b, r2 - r3, k)
     }
 
-    fn x_pow_k_eq_n(n: u32, x: u32, k: u32) -> bool {
+    fn x_pow_k_eq_n(n: u64, x: u64, k: u64) -> bool {
         let f = Integer::logk((2 * n).into());
         if x == 1 {
             return n == 1;
@@ -109,9 +123,9 @@ impl Integer {
         x_pow_k_eq_r
     }
 
-    fn is_kth_power(n: u32, k: u32, y: u32) -> bool {
+    fn is_kth_power(n: u64, k: u64, y: u64) -> bool {
         let f = Integer::logk((2 * n).into());
-        let b = f / k;
+        let b = Integer::ceil_div(f, k);
         let r = Integer::nroot(y, b, k);
         if k == 2 && r == 0 {
             return false;
@@ -127,9 +141,9 @@ impl Integer {
 
     pub fn is_perfect_power(&self) -> bool {
         let f = Integer::logk(2 * self.n);
-        let y = Integer::nroot(f / 2 + 1, self.n as u32, 1);
+        let y = Integer::nroot(Integer::ceil_div(f,2) + 1, self.n, 1);
         for p in Sieve::new(f.into()) {
-            if Integer::is_kth_power(self.n as u32, p as u32, y) {
+            if Integer::is_kth_power(self.n, p, y) {
                 return true;
             }
         }
