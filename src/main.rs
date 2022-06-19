@@ -1,4 +1,4 @@
-// use rug::Integer;
+use rug::Integer;
 use aks_primes::Integer as MyInteger;
 
 // struct AKS {
@@ -51,12 +51,24 @@ use aks_primes::Integer as MyInteger;
 //     }
 
 fn main() {
-    let n : u64 = 9;
+    let n : u64 = 62764785704439251
+
+
+
+    ;
     use std::time::Instant;
     use std::env;
     env::set_var("RUST_BACKTRACE", "1");
+
     let now = Instant::now();
     let test = MyInteger::new(n);
+    let result = test.is_perfect_power();
+    let elapsed = now.elapsed();
+    println!("{} perfect power: {}", n, result);
+    println!("Elapsed: {:.2?}", elapsed);
+
+    let now = Instant::now();
+    let test = Integer::from(n);
     let result = test.is_perfect_power();
     let elapsed = now.elapsed();
     println!("{} perfect power: {}", n, result);
