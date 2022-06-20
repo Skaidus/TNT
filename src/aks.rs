@@ -1,5 +1,9 @@
 pub mod original {
-    mod gmp;
+    pub mod gmp;
+}
+
+pub mod optimized {
+    pub mod custom;
 }
 
 pub trait AKS {

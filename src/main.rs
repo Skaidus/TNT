@@ -1,5 +1,5 @@
 use rug::Integer;
-use aks_primes::Integer as MyInteger;
+use aks_primes::aks::optimized::custom::Integer as MyInteger;
 
 // struct AKS {
 //     n: Integer,
