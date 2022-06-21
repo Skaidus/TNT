@@ -1,5 +1,6 @@
 use rug::Integer;
 use aks_primes::aks::optimized::custom::Integer as MyInteger;
+use aks_primes::aks::original::gmp::sieve::Sieve;
 
 // struct AKS {
 //     n: Integer,
@@ -51,27 +52,40 @@ use aks_primes::aks::optimized::custom::Integer as MyInteger;
 //     }
 
 fn main() {
-    let n : u64 = 62764785704439251
+    let n : u64 = 55
 
 
 
     ;
     use std::time::Instant;
-    use std::env;
-    env::set_var("RUST_BACKTRACE", "1");
+    // use std::env;
+    // env::set_var("RUST_BACKTRACE", "1");
 
-    let now = Instant::now();
-    let test = MyInteger::new(n);
-    let result = test.is_perfect_power();
-    let elapsed = now.elapsed();
-    println!("{} perfect power: {}", n, result);
-    println!("Elapsed: {:.2?}", elapsed);
+    // let now = Instant::now();
+    // let test = MyInteger::new(n);
+    // let result = test.is_perfect_power();
+    // let elapsed = now.elapsed();
+    // println!("{} perfect power: {}", n, result);
+    // println!("Elapsed: {:.2?}", elapsed);
 
+    // let now = Instant::now();
+    // let test = Integer::from(n);
+    // let result = test.is_perfect_power();
+    // let elapsed = now.elapsed();
+    // println!("{} perfect power: {}", n, result);
+    // println!("Elapsed: {:.2?}", elapsed);
     let now = Instant::now();
-    let test = Integer::from(n);
-    let result = test.is_perfect_power();
+    
+    let mut sieve = Sieve::new();
+    
+    
+    for i in 2..=n{
+        let test = Integer::from(i);
+        let result = sieve.is_prime(test);
+        println!("{} prime: {}", i, result);
+        println!("{}", sieve.size);
+    }
     let elapsed = now.elapsed();
-    println!("{} perfect power: {}", n, result);
     println!("Elapsed: {:.2?}", elapsed);
 }
 

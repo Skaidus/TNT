@@ -1,4 +1,4 @@
-mod sieve; 
+pub mod sieve; 
 use gmp_mpfr_sys::gmp;
 
 use crate::aks::AKS;
