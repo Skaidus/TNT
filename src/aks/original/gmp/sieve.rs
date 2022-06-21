@@ -9,7 +9,7 @@ impl Sieve {
     pub fn new() -> Sieve{
         Sieve{ table : Integer::new(), size : 2}
     }
-    pub fn is_prime(&mut self, r : Integer) -> bool {
+    pub fn is_prime(&mut self, r : &Integer) -> bool {
         let rul = r.to_u32().unwrap();
         if self.size >= rul {return !self.table.get_bit(rul)}
         self.size *= 2;
