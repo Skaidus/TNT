@@ -6,6 +6,7 @@ version = 3
 name = "aks_primes"
 version = "0.1.1"
 dependencies = [
+ "gmp-mpfr-sys",
  "rug",
 ]
 

@@ -8,8 +8,8 @@ pub struct CustomAKS {
 }
 
 impl AKS for CustomAKS {
-    type Number = u64;
-    fn is_prime(n : Self::Number) -> bool{
+    type Int = u64;
+    fn is_prime(n : Self::Int) -> bool{
         true
     }
 }

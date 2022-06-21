@@ -10,6 +10,6 @@ readme = "README.md"
 
 [dependencies]
 rug = "1.16"
-
+gmp-mpfr-sys = "1.4.8"
 [profile.release]
 debug = 1

@@ -1,12 +1,15 @@
-use crate::aks::AKS;
+mod sieve; 
+use gmp_mpfr_sys::gmp;
 
+use crate::aks::AKS;
+use rug::Integer;
 pub struct GmpAks {
 
 }
 
 impl AKS for GmpAks {
-    type Number = u64;
-    fn is_prime(n : Self::Number) -> bool{
+    type Int = Integer;
+    fn is_prime(n : Self::Int) -> bool{
         true
     }
 }

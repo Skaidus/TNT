@@ -7,6 +7,6 @@ pub mod optimized {
 }
 
 pub trait AKS {
-    type Number;
-    fn is_prime(n : Self::Number) -> bool;
+    type Int;
+    fn is_prime(n : Self::Int) -> bool;
 }
