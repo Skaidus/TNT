@@ -9,11 +9,11 @@ pub struct Poly {
 impl Poly {
 
     fn get_degree(&self) -> usize {
-        self.coef.len() - 1
+        self.degree
     }
 
     fn get_length(&self) -> usize {
-        self.degree
+        self.coef.len()
     }
 
     fn get_coeficient(&self, i : usize) -> &Integer {
@@ -21,8 +21,8 @@ impl Poly {
         self.coef.get(i).unwrap()
     }
 
-    fn set_coeficient(&mut self, new_coef : Integer, i : usize) {
-        if i<0 {panic!("coef is less than 0!")}
+    pub fn set_coeficient(&mut self, new_coef : Integer, i : usize) {
+        println!("{}", self.coef.len());
         if i > self.degree {
             self.coef.resize(i+1, Integer::ZERO);
             self.degree = i;
@@ -31,14 +31,18 @@ impl Poly {
     }
 
     pub fn new() -> Poly {
-        Poly {coef : Vec::with_capacity(1), degree : 0}
+        let mut coef = Vec::with_capacity(1);
+        coef.resize(1, Integer::ZERO);
+        Poly {coef, degree : 0}
     }
 
     pub fn with_length(initial_length : usize) -> Poly {
-        Poly {coef : Vec::with_capacity(initial_length), degree : initial_length - 1}
+        let mut coef = Vec::with_capacity(initial_length+1);
+        coef.resize(initial_length+1, Integer::ZERO);
+        Poly {coef , degree : initial_length }
     }
 
-    pub fn compact( &mut self) {
+    fn compact( &mut self) {
         let mut i = self.degree;
         while i > 0 {
             if self.coef[i] != ZERO {break}
@@ -62,14 +66,14 @@ impl Poly {
         let max_deg = x.get_degree().max(y.get_degree());
         for k in 0..polymod{
             let mut sum : Integer = Integer::ZERO;
-            for i in 0..k{
+            for i in 0..=k{
                 sum += x.get_coeficient(i)*y.get_coeficient(k-i);
                 sum +=  x.get_coeficient(i)*y.get_coeficient(k+polymod-i);
             }
-            for i in k+1..=polymod{
+            for i in k+1..=k+polymod{
                 sum += x.get_coeficient(i)*y.get_coeficient(k+polymod-i);
             }
-            (&sum % mod_).complete_into(&mut self.coef[k]);
+            self.set_coeficient((&sum % mod_).into(),k);
             if k > max_deg && sum==0u32  {break}
         }
         self.compact();
@@ -80,14 +84,14 @@ impl Poly {
         let max_deg = self.get_degree().max(y.get_degree());
         for k in 0..polymod{
             let mut sum : Integer = Integer::ZERO;
-            for i in 0..k{
+            for i in 0..=k{
                 sum += self.get_coeficient(i)*y.get_coeficient(k-i);
                 sum +=  self.get_coeficient(i)*y.get_coeficient(k+polymod-i);
             }
-            for i in k+1..=polymod{
+            for i in k+1..=k+polymod{
                 sum += self.get_coeficient(i)*y.get_coeficient(k+polymod-i);
             }
-            (&sum % mod_).complete_into(&mut self.coef[k]);
+            self.set_coeficient((&sum % mod_).into(),k);
             if k > max_deg && sum==0u32  {break}
         }
         self.compact();
@@ -99,14 +103,14 @@ impl Poly {
         let max_deg = self.get_degree().max(self.get_degree());
         for k in 0..polymod{
             let mut sum : Integer = Integer::ZERO;
-            for i in 0..k{
+            for i in 0..=k{
                 sum += self.get_coeficient(i)*self.get_coeficient(k-i);
                 sum +=  self.get_coeficient(i)*self.get_coeficient(k+polymod-i);
             }
-            for i in k+1..=polymod{
+            for i in k+1..=k+polymod{
                 sum += self.get_coeficient(i)*self.get_coeficient(k+polymod-i);
             }
-            (&sum % mod_).complete_into(&mut self.coef[k]);
+            self.set_coeficient((&sum % mod_).into(),k);
             if k > max_deg && sum==0u32  {break}
         }
         self.compact();
@@ -114,8 +118,9 @@ impl Poly {
 
     
 
-    pub fn assign_pow_mod(&mut self , x : &Self, power : Integer, mod_ : &Integer, polymod : usize) {
+    pub fn assign_pow_mod(&mut self , x : &Self, power : &Integer, mod_ : &Integer, polymod : usize) {
         self.clear();
+        
         self.set_coeficient(Integer::from(1u8), 0);
         for i in (0..=power.significant_bits()).rev(){
             self.assign_square_mod(mod_, polymod);
@@ -131,7 +136,7 @@ impl Poly {
 
 impl Clone for Poly {
     fn clone(&self) -> Poly {
-        let mut coef = Vec::with_capacity(self.get_length());
+        let mut coef = Vec::with_capacity(self.get_degree()+1);
         for i in 0..=self.degree{
             coef[i] = self.get_coeficient(i).clone();
         }

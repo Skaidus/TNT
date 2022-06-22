@@ -1,6 +1,6 @@
 use aks_primes::aks::AKS;
 use rug::Integer;
-use aks_primes::aks::optimized::custom::Integer as MyInteger;
+//use aks_primes::aks::optimized::custom::Integer as MyInteger;
 use aks_primes::aks::original::gmp::sieve::Sieve;
 use aks_primes::aks::original::gmp::GmpAks;
 
