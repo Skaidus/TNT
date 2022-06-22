@@ -1,9 +1,11 @@
 pub mod sieve;
-pub mod poly; 
+pub mod poly;
+pub mod constants; 
 use sieve::Sieve;
 use poly::Poly;
 use crate::aks::AKS;
 use rug::{Integer, Complete};
+use constants::Constants as C;
 
 #[cfg(test)]
 mod tests {
@@ -34,25 +36,33 @@ mod tests {
     }
 }
 
+
+
 pub struct GmpAks {
 
 }
 
+
 impl AKS for GmpAks {
     type Int = Integer;
+
+
+    
     fn is_prime(n : Self::Int) -> bool{
         if n.is_perfect_power() {return false}
         let mut s = Sieve::new();
         let mut r = Integer::from(2u32);
         let logn = r.significant_bits();
         let limit = 4 * (logn * logn);
+        let mut pow_mod_t;
         while r < n {
             if n.is_divisible(&r){return false}
             let mut failed = false;
             if s.is_prime(&r){
-                let mut i = Integer::from(1u32);
+                let mut i = C::ONE;
                 while i <= limit{
-                    if n.clone().pow_mod(&i, &r).unwrap() == 1u32{
+                    pow_mod_t = Integer::from(n.pow_mod_ref(&i, &r).unwrap()); 
+                    if pow_mod_t == 1u32{
                         failed = true;
                         break
                     }
@@ -67,16 +77,18 @@ impl AKS for GmpAks {
         let polylimit : Integer = Integer::from(r.clone().sqrt()+1u32)*2u32 * logn;
         let ui_r = r.to_usize_wrapping();
         let mut final_size = Integer::new();
-        for a in 0usize..=polylimit.to_usize().unwrap(){
+        let mut a_int;
+        for a in 0..=polylimit.to_usize().unwrap(){
+            a_int = Integer::from(a);
             (&n % &r).complete_into(&mut final_size);
             let coef = final_size.to_usize_wrapping();
             let mut compare = Poly::with_length(coef);
-            compare.set_coeficient(Integer::from(1u32), coef);
-            compare.set_coeficient(Integer::from(a), 0);
+            compare.set_coeficient(&C::ONE, coef);
+            compare.set_coeficient(&a_int, 0);
             let mut res = Poly::with_length(ui_r);
             let mut base = Poly::with_length(1);
-            base.set_coeficient(Integer::from(a), 0);
-            base.set_coeficient(Integer::from(1u32), 1);
+            base.set_coeficient(&a_int, 0);
+            base.set_coeficient(&C::ONE, 1);
             res.assign_pow_mod(&base, &n, &n, ui_r);
             if res != compare{return false}
         }
