@@ -3,7 +3,7 @@ pub mod poly;
 use gmp_mpfr_sys::gmp;
 use sieve::Sieve;
 use crate::aks::AKS;
-use rug::Integer;
+use rug::{Integer, Complete};
 pub struct GmpAks {
 
 }
@@ -33,6 +33,16 @@ impl AKS for GmpAks {
             r += 1;
         }
         if r == n {return true}
+        // Polynomial check
+        let polylimit : Integer = Integer::from(r.clone().sqrt()+1u32)*2u32 * logn;
+        let mut final_size = Integer::new();
+        for a in 0usize..=polylimit.to_usize().unwrap(){
+            (&n % &r).complete_into(&mut final_size);
+
+        }
+        
+        
+
         true
     }
 }

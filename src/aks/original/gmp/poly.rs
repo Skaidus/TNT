@@ -21,7 +21,7 @@ impl Poly {
         self.coef.get(i).unwrap()
     }
 
-    fn set_coeficient(&mut self, new_coef : &Integer, i : usize) {
+    fn set_coeficient(&mut self, new_coef : Integer, i : usize) {
         if i<0 {panic!("coef is less than 0!")}
         if i > self.degree {
             self.coef.resize(i+1, Integer::ZERO);
@@ -57,30 +57,70 @@ impl Poly {
         self.degree = 0;
     }
 
-    pub fn assign_mul_mod(&mut self , x : &Self, y : &Self, mod_ : Integer, polymod : usize) {
+    pub fn assign_mul_mod(&mut self , x : &Self, y : &Self, mod_ : &Integer, polymod : usize) {
         self.clear();
         let max_deg = x.get_degree().max(y.get_degree());
         for k in 0..polymod{
             let mut sum : Integer = Integer::ZERO;
             for i in 0..k{
-                sum += x.get_coeficient(i)*(y.get_coeficient(k-i) + y.get_coeficient(k+polymod-i)).complete();
+                sum += x.get_coeficient(i)*y.get_coeficient(k-i);
+                sum +=  x.get_coeficient(i)*y.get_coeficient(k+polymod-i);
             }
             for i in k+1..=polymod{
                 sum += x.get_coeficient(i)*y.get_coeficient(k+polymod-i);
             }
-            self.set_coeficient((&sum % &mod_), k);
-            if k > max_deg && sum==0   {break}
+            (&sum % mod_).complete_into(&mut self.coef[k]);
+            if k > max_deg && sum==0u32  {break}
         }
         self.compact();
     }
 
-    pub fn assign_pow_mod(&mut self , x : &Self, power : Integer, mod_ : Integer, polymod : usize) {
+    pub fn assign_self_mul_mod(&mut self , y : &Self, mod_ : &Integer, polymod : usize) {
         self.clear();
-        self.set_coeficient(&Integer::from(1u8), 0);
+        let max_deg = self.get_degree().max(y.get_degree());
+        for k in 0..polymod{
+            let mut sum : Integer = Integer::ZERO;
+            for i in 0..k{
+                sum += self.get_coeficient(i)*y.get_coeficient(k-i);
+                sum +=  self.get_coeficient(i)*y.get_coeficient(k+polymod-i);
+            }
+            for i in k+1..=polymod{
+                sum += self.get_coeficient(i)*y.get_coeficient(k+polymod-i);
+            }
+            (&sum % mod_).complete_into(&mut self.coef[k]);
+            if k > max_deg && sum==0u32  {break}
+        }
+        self.compact();
+    }
+
+
+    pub fn assign_square_mod(&mut self ,  mod_ : &Integer, polymod : usize) {
+        self.clear();
+        let max_deg = self.get_degree().max(self.get_degree());
+        for k in 0..polymod{
+            let mut sum : Integer = Integer::ZERO;
+            for i in 0..k{
+                sum += self.get_coeficient(i)*self.get_coeficient(k-i);
+                sum +=  self.get_coeficient(i)*self.get_coeficient(k+polymod-i);
+            }
+            for i in k+1..=polymod{
+                sum += self.get_coeficient(i)*self.get_coeficient(k+polymod-i);
+            }
+            (&sum % mod_).complete_into(&mut self.coef[k]);
+            if k > max_deg && sum==0u32  {break}
+        }
+        self.compact();
+    }
+
+    
+
+    pub fn assign_pow_mod(&mut self , x : &Self, power : Integer, mod_ : &Integer, polymod : usize) {
+        self.clear();
+        self.set_coeficient(Integer::from(1u8), 0);
         for i in (0..=power.significant_bits()).rev(){
-            self.assign_mul_mod(self, self, mod_, polymod);
+            self.assign_square_mod(mod_, polymod);
             if power.get_bit(i){
-                self.assign_mul_mod(self, x, mod_, polymod);
+                self.assign_self_mul_mod(x, mod_, polymod)
             }
             if i == 0 {break}
         }
