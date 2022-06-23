@@ -8,6 +8,10 @@ static ZERO : Integer = Integer::ZERO;
 
 impl Poly {
 
+    pub fn ceil_logk(k : &Integer) -> u32{
+        k.significant_bits() - (k.is_even() as u32)
+    }
+
 
     pub fn new() -> Poly {
         let mut coef = Vec::with_capacity(1);
@@ -125,7 +129,7 @@ impl Poly {
         self.clear();
         
         self.set_coeficient(&Integer::from(1u32), 0);
-        for i in (0..=power.significant_bits()).rev(){
+        for i in (0..=Self::ceil_logk(&power)).rev(){
             self.assign_square_mod(mod_, polymod);
             if power.get_bit(i){
                 self.assign_self_mul_mod(x, mod_, polymod)
