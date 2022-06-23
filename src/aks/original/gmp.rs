@@ -1,11 +1,9 @@
 pub mod sieve;
 pub mod poly;
-pub mod constants; 
 use sieve::Sieve;
 use poly::Poly;
 use crate::aks::AKS;
 use rug::{Integer, Complete};
-use constants::Constants as C;
 
 #[cfg(test)]
 mod tests {
@@ -55,11 +53,12 @@ impl AKS for GmpAks {
         let logn = r.significant_bits();
         let limit = 4 * (logn * logn);
         let mut pow_mod_t;
+        let ONE : Integer = Integer::from(1u32);
         while r < n {
             if n.is_divisible(&r){return false}
             let mut failed = false;
             if s.is_prime(&r){
-                let mut i = C::ONE;
+                let mut i = ONE.clone();
                 while i <= limit{
                     pow_mod_t = Integer::from(n.pow_mod_ref(&i, &r).unwrap()); 
                     if pow_mod_t == 1u32{
@@ -83,12 +82,12 @@ impl AKS for GmpAks {
             (&n % &r).complete_into(&mut final_size);
             let coef = final_size.to_usize_wrapping();
             let mut compare = Poly::with_length(coef);
-            compare.set_coeficient(&C::ONE, coef);
+            compare.set_coeficient(&ONE, coef);
             compare.set_coeficient(&a_int, 0);
             let mut res = Poly::with_length(ui_r);
             let mut base = Poly::with_length(1);
             base.set_coeficient(&a_int, 0);
-            base.set_coeficient(&C::ONE, 1);
+            base.set_coeficient(&ONE, 1);
             res.assign_pow_mod(&base, &n, &n, ui_r);
             if res != compare{return false}
         }

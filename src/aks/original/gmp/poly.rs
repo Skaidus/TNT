@@ -1,21 +1,23 @@
 use rug::{Integer, Complete};
-use super::constants::Constants as C;
 pub struct Poly {
     coef : Vec<Integer>,
     degree : usize
 }
 
+static ZERO : Integer = Integer::ZERO;
+
 impl Poly {
+
 
     pub fn new() -> Poly {
         let mut coef = Vec::with_capacity(1);
-        coef.resize(1, C::ZERO);
+        coef.resize(1, Integer::ZERO);
         Poly {coef, degree : 0}
     }
 
     pub fn with_length(initial_length : usize) -> Poly {
         let mut coef = Vec::with_capacity(initial_length+1);
-        coef.resize(initial_length+1, C::ZERO);
+        coef.resize(initial_length+1, Integer::ZERO);
         Poly {coef , degree : initial_length }
     }
 
@@ -24,14 +26,14 @@ impl Poly {
     }
 
     fn get_coeficient(&self, i : usize) -> &Integer {
-        if i > self.get_degree() {return &C::ZERO}
+        if i > self.get_degree() {return &ZERO}
         self.coef.get(i).unwrap()
     }
 
     pub fn set_coeficient(&mut self, new_coef : &Integer, i : usize) {
         //println!("{}", self.coef.len());
         if i > self.degree {
-            self.coef.resize(i+1, C::ZERO);
+            self.coef.resize(i+1, Integer::ZERO);
             self.degree = i;
         } 
         self.coef[i] = new_coef.clone();
@@ -40,7 +42,7 @@ impl Poly {
     fn compact( &mut self) {
         let mut i = self.degree;
         while i > 0 {
-            if self.coef[i] != C::ZERO {break}
+            if self.coef[i] != Integer::ZERO {break}
             i -= 1;
         }
         if self.degree != i {
@@ -61,7 +63,7 @@ impl Poly {
         let max_deg = x.get_degree().max(y.get_degree());
         let mut rem_t;
         for k in 0..polymod{
-            let mut sum : Integer = C::ZERO;
+            let mut sum : Integer = Integer::ZERO;
             for i in 0..=k{
                 sum += x.get_coeficient(i)*y.get_coeficient(k-i);
                 sum +=  x.get_coeficient(i)*y.get_coeficient(k+polymod-i);
@@ -102,7 +104,7 @@ impl Poly {
         let max_deg = self.get_degree().max(self.get_degree());
         let mut rem_t;
         for k in 0..polymod{
-            let mut sum : Integer = C::ZERO;
+            let mut sum : Integer =Integer::ZERO;
             for i in 0..=k{
                 sum += self.get_coeficient(i)*self.get_coeficient(k-i);
                 sum +=  self.get_coeficient(i)*self.get_coeficient(k+polymod-i);
@@ -122,7 +124,7 @@ impl Poly {
     pub fn assign_pow_mod(&mut self , x : &Self, power : &Integer, mod_ : &Integer, polymod : usize) {
         self.clear();
         
-        self.set_coeficient(&C::ONE, 0);
+        self.set_coeficient(&Integer::from(1u32), 0);
         for i in (0..=power.significant_bits()).rev(){
             self.assign_square_mod(mod_, polymod);
             if power.get_bit(i){
