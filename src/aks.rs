@@ -4,6 +4,7 @@ pub mod original {
 
 pub mod optimized {
     pub mod custom;
+    pub mod gmp_opt;
 }
 
 pub trait AKS {

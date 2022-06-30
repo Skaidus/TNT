@@ -1,5 +1,3 @@
-pub mod sieve;
-use sieve::Sieve;
 use crate::poly::Poly;
 use crate::aks::AKS;
 use rug::{Integer, Complete};
@@ -8,7 +6,7 @@ use rug::{Integer, Complete};
 mod tests {
     use crate::aks::AKS;
     use rug::Integer;
-    use super::GmpAks;
+    use super::GmpOptAks;
     use std::vec::IntoIter;
     #[test]
     fn recognizes_primes(){
@@ -18,7 +16,7 @@ mod tests {
         //98982599
         //,9984605927,999498062999,99996460031327,9999940600088207,999999594000041207,4611685283988009527,9223371593598182327
         ].into_iter();
-        assert!(iter.all(|x| GmpAks::is_prime(Integer::from(x))));
+        assert!(iter.all(|x| GmpOptAks::is_prime(Integer::from(x))));
 
     }
 
@@ -30,19 +28,47 @@ mod tests {
         ,776161,98982601
         //,9984605929,999498063001,99996460031329,9999940600088209,999999594000041209,4611685283988009529,9223371593598182329
         ].into_iter();
-        assert!(iter.all(|x| !GmpAks::is_prime(Integer::from(x))));
+        assert!(iter.all(|x| !GmpOptAks::is_prime(Integer::from(x))));
     }
 }
 
 
 
-pub struct GmpAks {
-
+pub struct GmpOptAks {
+    n : Integer,
+    logn : u32,
 }
 
+impl GmpOptAks {
+    // Finds smallest r st. O_r(n) > (log_2(n))^2
+    fn new(n : Integer)->GmpOptAks{
+        GmpOptAks{n, logn : Poly::ceil_logk(&n)}
+    }
 
-impl AKS for GmpAks {
+
+    fn get_r(&self) {
+        let max_k = self.logn.pow(2);
+        let max_r = self.logn.pow(5).max(3u32);
+        let mut next_r = true;
+        let mut r = Integer::from(2u32);
+        let mut k = Integer::new();
+        let mut n_pow_k_mod_r = Integer::new();
+        while next_r && r < max_r {
+            next_r = false;
+            k = Integer::from(1u32);
+            while !next_r && k <= max_k {
+                n_pow_k_mod_r = self.n.pow_mod_ref(&k, &r).;
+                next_r = self.n.pow_mod_ref(k, r) == 1u32;
+                k+=1u32;
+            }
+            r+=1u32;
+        }
+    }
+}
+
+impl AKS for GmpOptAks {
     type Int = Integer;
+
 
 
     
