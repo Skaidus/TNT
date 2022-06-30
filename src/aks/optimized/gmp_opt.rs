@@ -20,6 +20,8 @@ mod tests {
 
     }
 
+    
+
     #[test]
     fn recognizes_composites(){
         let mut iter : IntoIter<u32> = vec![64, 65, 66, 68, 69, 70, 72, 74, 93, 94, 95, 96, 98, 99, 100
@@ -45,6 +47,16 @@ impl GmpOptAks {
         GmpOptAks{logn : Poly::ceil_logk(&n), n}
     }
 
+    fn is_coprime_below_r(&self, r : &Integer)-> bool{
+        let mut a = r.clone();
+        let mut gcd_a_n = Integer::new();
+        while a > 1{
+            a.gcd_ref(&self.n).complete_into(&mut gcd_a_n);
+            if 1u32 < gcd_a_n &&  gcd_a_n < self.n {return false}
+            a-=1u32;
+        }
+        true
+    }
 
     fn get_r(&self) -> Integer{
         let max_k = self.logn.pow(2);
@@ -65,18 +77,56 @@ impl GmpOptAks {
         }
         r-1u32
     }
+
+    fn get_phi(k : &Integer)-> Integer{
+        let mut k = k.to_usize_wrapping();
+        let mut res = k;
+        let mut p = 2usize;
+        while p*p<=k{
+            if k%p==0{
+                while k%p==0{
+                    k /=p;
+                }
+                res -= res/p;
+            }
+            p+=1;
+        }
+        if k>1 {res -= res/k;}
+        Integer::from(res)
+    }
 }
 
 impl AKS for GmpOptAks {
     type Int = Integer;
-
-
-
     
     fn is_prime(n : Self::Int) -> bool{
         if n.is_perfect_power() {return false}
         let myself = GmpOptAks::new(n);
         let r = myself.get_r();
+        if myself.is_coprime_below_r(&r) {return false}
+        if myself.n <= r {return true}
+        // Polynomial check
+        let ONE : Integer = Integer::from(1u32);
+        let polylimit : Integer = Integer::from(GmpOptAks::get_phi(&r).sqrt()*myself.logn);
+        let ui_r = r.to_usize_wrapping();
+        let mut final_size = Integer::new();
+        let mut a_int;
+        for a in 1..=polylimit.to_usize().unwrap(){
+            a_int = Integer::from(a);
+            (&myself.n % &r).complete_into(&mut final_size);
+            let coef = final_size.to_usize_wrapping();
+            let mut compare = Poly::with_length(coef);
+            compare.set_coeficient(&ONE, coef);
+            compare.set_coeficient(&a_int, 0);
+            let mut res = Poly::with_length(ui_r);
+            let mut base = Poly::with_length(1);
+            base.set_coeficient(&a_int, 0);
+            base.set_coeficient(&ONE, 1);
+
+            res.assign_pow_mod(&base, &myself.n, &myself.n, ui_r);
+
+            if res != compare{return false}
+        }
         true
     }
 }
