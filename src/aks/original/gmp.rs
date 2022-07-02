@@ -1,6 +1,7 @@
 pub mod sieve;
+pub mod poly;
 use sieve::Sieve;
-use crate::poly::Poly;
+use poly::Poly;
 use crate::aks::AKS;
 use rug::{Integer, Complete};
 
