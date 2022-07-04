@@ -1,4 +1,4 @@
-use rug::{Integer, Complete};
+use rug::{Integer, Complete, ops::Pow};
 pub struct Poly {
     // (mod x^r - 1, n)
     r : u32, 
@@ -13,6 +13,10 @@ impl Poly {
 
     pub fn ceil_logk(k : &Integer) -> u32{
         k.significant_bits() - (k.is_even() as u32)
+    }
+
+    pub fn floor_logk(k : u32) -> u32{
+        32 - k.leading_zeros()    
     }
 
     pub fn from_n_and_r(r : u32, n : usize ) -> Poly {
@@ -40,6 +44,7 @@ impl Poly {
 
     fn compact( &mut self) {
         let mut i = self.degree;
+        
         while i > 0 {
             if self.coef[i] != Integer::ZERO {break}
             i -= 1;
@@ -51,8 +56,27 @@ impl Poly {
         }
     }
 
-    fn polySquare(){
-        
+    fn polySquare(&mut self){
+
+        let b = Self::floor_logk(self.degree+1) + 2 * Self::floor_logk(self.n.try_into().unwrap())/Self::floor_logk(2) + 1;
+        let mut x = Integer::from(0);
+        for i in (1..=self.degree).rev(){
+            x += self.coef[i as usize];
+            x *= 2_u32.pow(i);
+        }
+        x += self.coef[0];
+        x = x.square();
+        let new_degree = 2 * self.degree;
+        let mut new_coef : Vec<usize> = Vec::with_capacity(new_degree as usize + 1);
+        let mut t : Integer = Integer::from(0);
+        for i in 0usize..=new_degree as usize{
+            t = x/2u32.pow(b);
+            t = t / self.n;
+            new_coef[i] = t.to_usize().unwrap();
+            x %= b;
+        }
+        self.degree = new_degree;
+        self.coef = new_coef;
     }
 
     pub fn clear(&mut self) {
