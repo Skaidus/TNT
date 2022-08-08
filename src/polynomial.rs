@@ -1,9 +1,30 @@
+use std::fmt;
+
 /// A representation of a polynomial in the ring (x^r - 1, n)
 pub struct Poly {
     mod_r : usize, 
     mod_n : usize,
     degree : usize,
     coefficients : Vec<usize>
+}
+
+impl fmt::Display for Poly {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut i = 0;
+        let output = self.coefficients
+        .iter()
+        .map(|coef|{
+            i+=1;
+            format!("{}x ^ {} ",
+            match coef {
+                0 => "",
+                2
+
+            }
+            coef, i)
+        }).collect::<Vec<String>>().join(" + ");   
+        write!(f, "{} mod ({}, x ^ {} - 1)", output, self.mod_n, self.mod_r)
+    }
 }
 
 impl Poly {
@@ -21,6 +42,42 @@ impl Poly {
         Poly { mod_r, mod_n, degree: 1, coefficients: vec![0,1]  }
     }
 
+    /// Shortcut for (x * y) % m
+    fn _umulrem(x : usize, y : usize, m : usize) -> usize{
+        (x * y) % m
+    }
+    /// Shortcut for (x * y + a) % m
+    fn _umuladdrem(x : usize, y : usize, a : usize, m : usize) -> usize{
+        (x * y + a) % m
+    }
+    /// Squares the polynomial and stores the result in 
+    /// the instance. 
+    /// # Examples
+    /// ```
+    /// use aks_primes::polynomial::Poly;
+    /// let poly = Poly::new(5, 6);
+    /// ```
+    fn _poly_square(&mut self){
+        let new_degree = self.degree + self.degree;
+        let mut new_coef : Vec<usize> = vec![0; new_degree+1];
+        for j in 1..=self.degree{
+            let x = self.coefficients[j];
+            if x != 0 {
+                for i in 0..j{
+                    let y = 2 * self.coefficients[i];
+                    let t = Poly::_umuladdrem(x, y, new_coef[j+i], self.mod_n);
+                    new_coef[j+i] = t;
+                }
+            }
+        }
+        for i in 0..=self.degree{
+            let x = self.coefficients[i];
+            let t = Poly::_umuladdrem(x, x, new_coef[2*i], self.mod_n);
+            new_coef[2 * i] = t;
+        }
+        self.degree = new_degree;
+        self.coefficients = new_coef;
+    }
     // pub fn ceil_logk(k : &Integer) -> u32{
     //     k.significant_bits() - (k.is_even() as u32)
     // }

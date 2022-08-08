@@ -57,7 +57,10 @@
 //     }
 
 fn main() {
-    
+    use aks_primes::polynomial::Poly;
+    let poly = Poly::new(5, 6);
+    println!("{poly}");
+    println!("{poly}");
 }
 
 // nat log: https://stackoverflow.com/questions/70688941/how-to-calculate-integer-logarithm-of-base-3-using-fast-bit-operations
