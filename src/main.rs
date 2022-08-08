@@ -1,8 +1,11 @@
-use aks_primes::aks::AKS;
-use rug::Integer;
-//use aks_primes::aks::optimized::custom::Integer as MyInteger;
-use aks_primes::aks::original::gmp::sieve::Sieve;
-use aks_primes::aks::original::gmp::GmpAks;
+
+
+
+// use aks_primes::aks::AKS;
+// use rug::Integer;
+// //use aks_primes::aks::optimized::custom::Integer as MyInteger;
+// use aks_primes::aks::original::gmp::sieve::Sieve;
+// use aks_primes::aks::original::gmp::GmpAks;
 
 // struct AKS {
 //     n: Integer,
@@ -54,49 +57,7 @@ use aks_primes::aks::original::gmp::GmpAks;
 //     }
 
 fn main() {
-    let n : u64 = 17
-
-
-
-    ;
-    use std::time::Instant;
-    // use std::env;
-    // env::set_var("RUST_BACKTRACE", "1");
-
-    // let now = Instant::now();
-    // let test = MyInteger::new(n);
-    // let result = test.is_perfect_power();
-    // let elapsed = now.elapsed();
-    // println!("{} perfect power: {}", n, result);
-    // println!("Elapsed: {:.2?}", elapsed);
-
-    // let now = Instant::now();
-    // let test = Integer::from(n);
-    // let result = test.is_perfect_power();
-    // let elapsed = now.elapsed();
-    // println!("{} perfect power: {}", n, result);
-    // println!("Elapsed: {:.2?}", elapsed);
-    let now = Instant::now();
     
-    let mut sieve = Sieve::new();
-    
-    
-    for i in 2..=n{
-        let test = Integer::from(i);
-        let result = sieve.is_prime(&test);
-        println!("{} prime: {}", i, result);
-        println!("{}", sieve.size);
-    }
-    let elapsed = now.elapsed();
-    println!("Elapsed: {:.2?}", elapsed);
-
-
-    let now = Instant::now();
-    let test = Integer::from(n);
-    let result = GmpAks::is_prime(test);
-    let elapsed = now.elapsed();
-    println!("{} prime: {}", n, result);
-    println!("Elapsed: {:.2?}", elapsed);
 }
 
 // nat log: https://stackoverflow.com/questions/70688941/how-to-calculate-integer-logarithm-of-base-3-using-fast-bit-operations

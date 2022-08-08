@@ -1,4 +1,4 @@
-mod polynomial;
+pub mod polynomial;
 pub mod number_theory {
     pub mod primality {
         pub mod aks {
