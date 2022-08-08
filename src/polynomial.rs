@@ -11,7 +11,7 @@ impl Poly {
         Poly { mod_r: 0, mod_n: 0, degree: 0, coefficients: Vec::new() }
     }
     /// Creates a new polynomial in the ring (x^r - 1, n) 
-    /// innitialized to x
+    /// default to x
     /// # Examples
     /// ```
     /// use aks_primes::polynomial::Poly;
