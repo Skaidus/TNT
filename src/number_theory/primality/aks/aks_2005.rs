@@ -1,16 +1,14 @@
-pub mod sieve;
-pub mod poly;
-use sieve::Sieve;
-use poly::Poly;
-use crate::aks::AKS;
+//use crate::polynomial::Poly;
+use crate::number_theory::primality::PrimalityTest;
 use rug::{Integer, Complete};
 
 #[cfg(test)]
 mod tests {
-    use crate::aks::AKS;
     use rug::Integer;
-    use super::GmpAks;
+    use super::Aks2005;
+    use crate::number_theory::primality::PrimalityTest;
     use std::vec::IntoIter;
+    
     #[test]
     fn recognizes_primes(){
         let mut iter : IntoIter<u32>  = vec![2, 3, 5, 7, 11, 13, 17, 19
@@ -19,7 +17,7 @@ mod tests {
         //98982599
         //,9984605927,999498062999,99996460031327,9999940600088207,999999594000041207,4611685283988009527,9223371593598182327
         ].into_iter();
-        assert!(iter.all(|x| GmpAks::is_prime(Integer::from(x))));
+        assert!(iter.all(|x| Aks2005::is_prime(Integer::from(x))));
 
     }
 
@@ -31,69 +29,21 @@ mod tests {
         ,776161,98982601
         //,9984605929,999498063001,99996460031329,9999940600088209,999999594000041209,4611685283988009529,9223371593598182329
         ].into_iter();
-        assert!(iter.all(|x| !GmpAks::is_prime(Integer::from(x))));
+        assert!(iter.all(|x| !Aks2005::is_prime(Integer::from(x))));
     }
 }
 
 
 
-pub struct GmpAks {
-
+pub struct Aks2005 {
+    n : Integer,
+    logn : u32,
 }
 
-
-impl AKS for GmpAks {
+impl PrimalityTest for Aks2005 {
     type Int = Integer;
-
-
     
     fn is_prime(n : Self::Int) -> bool{
-        if n.is_perfect_power() {return false}
-        let mut s = Sieve::new();
-        let mut r = Integer::from(2u32);
-        let logn = Poly::ceil_logk(&n);
-        let limit = 4 * (logn * logn);
-        let mut pow_mod_t;
-        let ONE : Integer = Integer::from(1u32);
-        while r < n {
-            if n.is_divisible(&r){return false}
-            let mut failed = false;
-            if s.is_prime(&r){
-                let mut i = ONE.clone();
-                while i <= limit{
-                    pow_mod_t = Integer::from(n.pow_mod_ref(&i, &r).unwrap()); 
-                    if pow_mod_t == 1u32{
-                        failed = true;
-                        break
-                    }
-                    i += 1u32;
-                }
-                if !failed {break}
-            }
-            r += 1;
-        }
-        if r == n {return true}
-        // Polynomial check
-        let polylimit : Integer = Integer::from(r.clone().sqrt()+1u32)*2u32 * logn;
-        let ui_r = r.to_usize_wrapping();
-        let mut final_size = Integer::new();
-        let mut a_int;
-        for a in 1..=polylimit.to_usize().unwrap(){
-            a_int = Integer::from(a);
-            (&n % &r).complete_into(&mut final_size);
-            let coef = final_size.to_usize_wrapping();
-            let mut compare = Poly::with_length(coef);
-            compare.set_coeficient(&ONE, coef);
-            compare.set_coeficient(&a_int, 0);
-            let mut res = Poly::with_length(ui_r);
-            let mut base = Poly::with_length(1);
-            base.set_coeficient(&a_int, 0);
-            base.set_coeficient(&ONE, 1);
-
-            res.assign_pow_mod(&base, &n, &n, ui_r);
-
-            if res != compare{return false}
-        }
         true
     }
 }
