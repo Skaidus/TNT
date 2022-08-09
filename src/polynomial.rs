@@ -153,7 +153,7 @@ impl Poly {
         if self.coefficients[self.degree] != 1 {
             let y = Self::_inv(self.coefficients[self.degree], self.mod_n);
             for i in 0..=self.degree{
-                let mut t = self.coefficients[i];
+                let t = self.coefficients[i];
                 self.coefficients[i] = Self::_umulrem(t, y, self.mod_n);
             }
         }
