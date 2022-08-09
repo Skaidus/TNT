@@ -58,8 +58,12 @@
 
 fn main() {
     use aks_primes::polynomial::Poly;
-    let poly = Poly::new(5, 6);
+    let mut poly = Poly::new(1, 17);
     println!("{poly}");
+    poly += 1;
+    poly._poly_square();
+    println!("{poly}");
+    poly._poly_square();
     println!("{poly}");
 }
 
