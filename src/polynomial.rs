@@ -10,20 +10,23 @@ pub struct Poly {
 
 impl fmt::Display for Poly {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let mut i = 0;
-        let output = self.coefficients
-        .iter()
-        .map(|coef|{
-            i+=1;
-            format!("{}x ^ {} ",
-            match coef {
-                0 => "",
-                2
-
+        let mut output = Vec::with_capacity(self.coefficients.len());
+        for i in 0..self.coefficients.len(){
+            if self.coefficients[i] != 0 {
+                output.push(format!("{}{}",
+                match self.coefficients[i] {
+                    1 => "".to_string(),
+                    other => other.to_string()
+                },
+                match i {
+                    0  => "".to_string(),
+                    1  => "x".to_string(),
+                    other => format!("x ^{}",other)
+                }))
             }
-            coef, i)
-        }).collect::<Vec<String>>().join(" + ");   
-        write!(f, "{} mod ({}, x ^ {} - 1)", output, self.mod_n, self.mod_r)
+            
+        }
+        write!(f, "({}) mod (x ^ {} - 1, {})", output.join(" + "), self.mod_r, self.mod_n)
     }
 }
 
