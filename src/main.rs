@@ -57,11 +57,7 @@
 //     }
 
 fn main() {
-    use aks_primes::polynomial::Poly;
-    let mut poly = Poly::new(1, 3);
-    poly += 1; // x + 1
-    poly = poly.pow(2);
-    print!("{poly}")
+    
 }
 
 // nat log: https://stackoverflow.com/questions/70688941/how-to-calculate-integer-logarithm-of-base-3-using-fast-bit-operations
