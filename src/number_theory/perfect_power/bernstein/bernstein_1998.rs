@@ -166,8 +166,8 @@ impl Bernstein1988 {
         if self.n_eq_x_pow_k(n, r, k) {
             return true;
         }
-        if k == 2 {
-            return self.n_eq_x_pow_k(n, 2u32.pow(b) - r, k);
+        if k == 2 && self.n_eq_x_pow_k(n, 2u32.pow(b) - r, k){
+            return true;
         }
         false
     }
