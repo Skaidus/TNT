@@ -1,8 +1,11 @@
+use super::PrimesLessThan;
+
 pub struct Sieve {
 }
 
-impl Sieve {
-    pub fn get_primes(n : usize) -> Vec<usize>{
+impl PrimesLessThan for Sieve {
+    type Int = usize;
+    fn get_primes(n : Self::Int) -> Vec<Self::Int>{
         let mut is_prime = vec![true;n];
         let mut primes = Vec::with_capacity(n/(64 - n.leading_zeros() as usize));
         is_prime[0] = false;
