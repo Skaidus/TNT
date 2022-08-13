@@ -141,14 +141,30 @@ impl Bernstein1988 {
         if b == 1 {
             return 1;
         }
-        let z = Self::nroot(Self::div_ceiling(b, 2), y, k);
-        let mut r2 = Self::mul_2(b, z, k + 1);
-        let r3 = Self::mul_2(b, y, Self::pow_2(b, z, k+1));
-        while r2 < r3 {
-            r2 += 2u32.pow(b);
+        let mut b = b;
+        let mut vec_b = Vec::with_capacity(Self::log2_floor(b as u64) as usize);
+        while b > 1{
+            vec_b.push(b);
+            if b%2 == 0 {
+                b += 1;
+            }
+            b /= 2;
         }
-        let temp = Self::div_2(b, r2 - r3, k);
-        temp
+        let mut z = 1;
+        for b in vec_b{
+            let mut r2 = Self::mul_2(b, z, k + 1);
+            let r3 = Self::mul_2(b, y, Self::pow_2(b, z, k+1));
+            while r2 < r3 {
+                r2 += 2u32.pow(b);
+            }
+            z = Self::div_2(b, r2 - r3, k);
+            println!("z = {}", z)
+        }
+        z
+        // let z = Self::nroot(Self::div_ceiling(b, 2), y, k);
+        // let mut r2 = Self::mul_2(b, z, k + 1);
+        // let r3 = Self::mul_2(b, y, Self::pow_2(b, z, k+1));
+        
     }
     
     // Algorithm S2
@@ -161,14 +177,37 @@ impl Bernstein1988 {
         if b == 2 {
             return if y % 8 == 1 {1} else {0};
         }
-        let z = Self::nroot_2(Self::div_ceiling(b+1, 2), y);
-        if z == 0 {return 0}
-        let mut r2 = Self::mul_2(b+1, z, 3);
-        let r3 = Self::mul_2(b+1, y, Self::pow_2(b+1, z, 3));
-        while r2 < r3 {
-            r2 += 2u32.pow(b);
+        let mut b = b;
+        let mut vec_b = Vec::with_capacity(Self::log2_floor(b as u64) as usize);
+        while b > 2{
+            vec_b.push(b);
+            b = if b%2 == 0 {
+                b+1/2
+            } else {
+                1 + b/2
+            };
+            b /= 2;
         }
-        ((r2 - r3)/2) % (2u32.pow(b))
+        if y % 8 != 1 {return 0}
+        let mut z = 1;
+        for b in vec_b {
+            let mut r2 = Self::mul_2(b+1, z, 3);
+            let r3 = Self::mul_2(b+1, y, Self::pow_2(b+1, z, 3));
+            while r2 < r3 {
+               r2 += 2u32.pow(b);
+             }
+            z = ((r2 - r3)/2) % (2u32.pow(b));
+            if z == 0 {return 0}
+        }
+        z
+        // let z = Self::nroot_2(Self::div_ceiling(b+1, 2), y);
+        // if z == 0 {return 0}
+        // let mut r2 = Self::mul_2(b+1, z, 3);
+        // let r3 = Self::mul_2(b+1, y, Self::pow_2(b+1, z, 3));
+        // while r2 < r3 {
+        //     r2 += 2u32.pow(b);
+        // }
+        // ((r2 - r3)/2) % (2u32.pow(b))
     }
 
     // Algorithm K2
@@ -179,6 +218,7 @@ impl Bernstein1988 {
         let b = Self::div_ceiling(self.f, k);
         let r = Self::nroot(b, y, k);
         println!("{} == ?^{}", n, k);
+        println!("r = {}", r);
         if k == 2 && r == 0 {
             return false;
         }
@@ -199,6 +239,7 @@ impl Bernstein1988 {
         let test = Self::new(Self::log2_floor(2 * n));
         let b = Self::div_ceiling(test.f, 2);
         let y = Self::nroot(b + 1, n as u32, 1);
+        println!("f = {}\nb = {}\ny = {}", test.f, b, y);
         for p in NaivePlt::get_primes(test.f as usize) {
             if Self::is_kth_power(&test, n as u32, p as u32, y) {
                 return true;
