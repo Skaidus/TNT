@@ -59,7 +59,7 @@
 
 fn main() {
     use aks_primes::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
-    let n = 25;
+    let n = 121;
     println!("{} is PP: {}",n, Bernstein1988::is_perfect_power(n) )
 }
 
