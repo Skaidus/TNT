@@ -10,6 +10,7 @@ impl PrimesLessThan for Sieve {
         let mut primes = Vec::with_capacity(n/(64 - n.leading_zeros() as usize));
         is_prime[0] = false;
         is_prime[1] = false;
+        primes.push(2);
         let mut i = 3;
         while i * i <= n {
             if is_prime[i]{
