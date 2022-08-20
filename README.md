@@ -1,5 +1,5 @@
 # TNT
-TNT is a free library focused on speed. It provides a rich set of functions that implement many certificates about Integers. It stands for **TNT Number Theory**.
+TNT is a free library focused on speed. It provides a rich set of functions that implement many certificates about Integers. The name stands for **TNT Number Theory**.
 
 Here is the list of certificates that TNT provides:
 
