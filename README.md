@@ -1,6 +1,8 @@
 # TNT
 TNT is a free library focused on speed. It provides a rich set of functions that implement many certificates about Integers. The name stands for **TNT Number Theory**.
 
+TNT also has a wide amount of tests that check the correctness of the implemented algorithm unlike other proposals.
+
 Here is the list of certificates that TNT provides:
 
 * **Primality:** whether the input is a prime number.
