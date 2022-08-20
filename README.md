@@ -12,4 +12,4 @@ Here is the list of certificates that TNT provides:
   * [Quadratic Sieve of Atkin](https://cr.yp.to/papers/primesieves-20020329-retypeset20220327.pdf) (To do)
 * **Perfect Power Detection:** mostly algorithms by Daniel J. Bernstein:
   * [Detecting Perfect Powers in Essentially Linear Time](https://www.ams.org/journals/mcom/1998-67-223/S0025-5718-98-00952-1/S0025-5718-98-00952-1.pdf).
-  * [Detecting perfect powers by factoring into coprimes](https://cr.yp.to/lineartime/powers2-20060914-ams.pdf)
+  * [Detecting perfect powers by factoring into coprimes](https://cr.yp.to/lineartime/powers2-20060914-ams.pdf) (To do)
