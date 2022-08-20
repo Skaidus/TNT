@@ -1,5 +1,8 @@
 # TNT
-Rust implementation focused on performance of many Number Theory certificates: 
+TNT is a free library focused on speed. It provides a rich set of functions that implement many certificates about Integers. It stands for **TNT Number Theory**.
+
+Here is the list of certificates that TNT provides:
+
 * **Primality:** whether the input is a prime number.
   * [AKS 2002](https://cse.iitk.ac.in/users/manindra/algebra/primality_original.pdf) (To do)
   * [AKS 2003](https://www.cse.iitk.ac.in/users/manindra/algebra/primality_v6.pdf) (To do)
