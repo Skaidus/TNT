@@ -10,3 +10,6 @@ readme = "README.md"
 
 [profile.release]
 debug = 1
+
+[dependencies]
+num = "0.4.0"

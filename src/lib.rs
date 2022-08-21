@@ -1,5 +1,19 @@
+
+
 pub mod polynomial;
 pub mod number_theory {
+    use num::{PrimInt, Unsigned};
+    use std::{fmt::Display};
+    pub trait UnsigInt : PrimInt + Unsigned + Display {
+        fn two() -> Self{
+            Self::one()+Self::one()
+        }
+    }
+
+
+
+    
+    impl UnsigInt for u32{}
     pub mod primality {
         pub mod aks {
             pub mod aks_2002;
@@ -27,4 +41,5 @@ pub mod number_theory {
             pub mod bernstein_1998;
         }
     }
+    pub mod util;
 }

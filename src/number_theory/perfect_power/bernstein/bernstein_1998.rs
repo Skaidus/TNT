@@ -1,8 +1,12 @@
+use crate::number_theory::UnsigInt;
+use crate::number_theory::util;
 use crate::number_theory::primes_less_than::{
     //sieve::Sieve,
      PrimesLessThan};
 
-pub struct Bernstein1988 {
+pub struct Bernstein1988
+{
+    n : u32,
     f : u32
 }
 
@@ -24,7 +28,7 @@ mod tests {
             3125, // 5^5
             6561 // 3^8
             ].into_iter();
-        assert!(iter.all(|x| Bernstein1988::is_perfect_power(x as u64)));
+        assert!(iter.all(|x| Bernstein1988::is_perfect_power(x)));
 
     }
 
@@ -41,58 +45,28 @@ mod tests {
             3127, // 5^5 + 2
             6563 // 3^8 + 2
             ].into_iter();
-        assert!(iter.all(|x| !Bernstein1988::is_perfect_power(x as u64)));
+        assert!(iter.all(|x| !Bernstein1988::is_perfect_power(x)));
     }
 }
 
 impl Bernstein1988 {
-    fn new(f :u32) -> Self {
-        Self{f}
+    fn new(n :u32) -> Self {
+        Self{n, f : util::log2_floor(2*n)}
 
     }
-
-    /// Calculates log2_floor(k)
-    /// # Examples
-    /// ```
-    /// use aks_primes::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
-    /// let mut test = vec![
-    ///     (20, 4),
-    ///     (16, 4),
-    ///     (78, 6),
-    ///     (556,9),
-    ///     (1, 0),
-    ///     (2, 1)
-    /// ].into_iter();
-    /// assert!(test.all(|x| Bernstein1988::log2_floor(x.0) == x.1));
-    /// ```
-    pub fn log2_floor(k: u64) -> u32 {
-        return if k>1 {1 + Self::log2_floor(k/2)} else {0}
-    }
-
-    fn is_even(k : u32) -> bool {
-        k % 2 == 0
-    }
-
     
-    fn div_ceiling(f : u32, k : u32)->u32{
-        let q = f / k;
-        let r = f % k;
-        if r == 0 {q} else {q+1}
-    }
-
-
-    fn mul_2(b: u32, m: u32, k: u32) -> u32 {
-        (k * m) % (2u32.pow(b))
+    fn mul_2<U: UnsigInt>(b: u32, m: U, k: U) -> U {
+        (k * m) % (U::two().pow(b))
     }
 
     // Unique integer d between 0 and 2^b s.t
     // (m = kd) % exp aka (m/k)%exp
-    fn div(exp: u32, m: u32, k: u32, neg : bool) -> u32 {
+    fn div<U: UnsigInt>(exp: U, m: U, k: U, neg : bool) -> U {
         
-        if Self::is_even(k) {panic!("expected k odd, {} given", k)}
+        if util::is_even(k) {panic!("expected k odd, {} given", k)}
         let m_mod = m % exp ;
         
-        for d in 0..exp-1 {
+        for d in num::range(U::zero(), exp-U::one()) {
             let kd_mod = (k * d) % exp;
             if m_mod == kd_mod {
                 if neg {
@@ -103,9 +77,9 @@ impl Bernstein1988 {
             }
         }
         if neg {
-            1
+            U::one()
         } else {
-            exp - 1
+            exp - U::one()
         }
     }
 
@@ -130,8 +104,8 @@ impl Bernstein1988 {
 
     // Power up to b bits
     // n**k mod 2**b
-    fn pow_2(b: u32, x: u32, k: u32) -> u32 {
-        x.pow(k) % 2u32.pow(b)
+    fn pow_2<U: UnsigInt>(b: u32, x: U, k: u32) -> U {
+        x.pow(k) % U::two().pow(b)
         //Self::power(x, k, 2u32.pow(b))
     }
 
@@ -161,15 +135,15 @@ impl Bernstein1988 {
     // Algorithm N2
     // nroot_{2,b}(y,k)
     fn nroot(b: u32, y: u32, k: u32) -> u32 {
-        if Self::is_even(y)  {panic!("expected y odd, {} given", y)}
+        if util::is_even(y)  {panic!("expected y odd, {} given", y)}
         if k == 2 {return Self::nroot_2(b, y)}
-        else if Self::is_even(k) {panic!("expected k odd, {} given", k)}
+        else if util::is_even(k) {panic!("expected k odd, {} given", k)}
         //println!("b = {} y = {} k = {}", b, y ,k);
         if b == 1 {
             return 1;
         }
         let mut b = b;
-        let mut vec_b = Vec::with_capacity(Self::log2_floor(b as u64) as usize);
+        let mut vec_b = Vec::with_capacity(util::log2_floor(b) as usize);
         while b > 1{
             vec_b.push(b);
             if b%2 != 0 {
@@ -201,7 +175,7 @@ impl Bernstein1988 {
     // nroot_{2,b}(y,2)
     fn nroot_2(b: u32, y: u32) -> u32 {
         //println!("b = {} y = {} k = {}", b, y ,2);
-        if Self::is_even(y) {panic!("expected y odd, {} given", y)}        
+        if util::is_even(y) {panic!("expected y odd, {} given", y)}        
         if b == 1 {
             return if y % 4 == 1 {1} else {0};
         }
@@ -209,7 +183,7 @@ impl Bernstein1988 {
             return if y % 8 == 1 {1} else {0};
         }
         let mut b = b;
-        let mut vec_b = Vec::with_capacity(Self::log2_floor(b as u64) as usize);
+        let mut vec_b = Vec::with_capacity(util::log2_floor(b) as usize);
         while b > 2{
             //println!("b = {}", b);
             vec_b.push(b);
@@ -241,12 +215,12 @@ impl Bernstein1988 {
     }
 
     // Algorithm K2
-    fn is_kth_power(&self, n: u32, k: u32, y: u32) -> bool {
-        if Self::is_even(n) {panic!("expected n odd, {} given", n)}
-        if Self::is_even(k) && k != 2 {panic!("expected k odd or k=2, {} given", k)}
-        if Self::is_even(y) {panic!("expected y odd, {} given", y)}
+    fn is_kth_power(&self, k: u32, y: u32) -> bool {
+        if util::is_even(self.n) {panic!("expected n odd, {} given", self.n)}
+        if util::is_even(k) && k != 2 {panic!("expected k odd or k=2, {} given", k)}
+        if util::is_even(y) {panic!("expected y odd, {} given", y)}
         
-        let b = Self::div_ceiling(self.f, k);
+        let b = util::div_ceiling(self.f, k);
         //println!("{} == ?^{}", n, k);
         let r : u32;
         if k == 2 {
@@ -256,10 +230,10 @@ impl Bernstein1988 {
             r = Self::nroot(b, y, k);
         }
         //println!("r = {}", r);
-        if self.n_eq_x_pow_k(n, r, k) {
+        if self.n_eq_x_pow_k(self.n, r, k) {
             return true;
         }
-        if k == 2 && self.n_eq_x_pow_k(n, 2u32.pow(b) - r, k){
+        if k == 2 && self.n_eq_x_pow_k(self.n, 2u32.pow(b) - r, k){
             return true;
         }
         false
@@ -285,15 +259,15 @@ impl Bernstein1988 {
     /// ].into_iter();
     /// assert!(not_pp.all(|x| !Bernstein1988::is_perfect_power(x)));
     /// ```
-    pub fn is_perfect_power(n : u64) -> bool {
+    pub fn is_perfect_power(n : u32) -> bool {
         use crate::number_theory::primes_less_than::sieve::Sieve;
-        if Self::is_even(n as u32) {panic!("expected n odd, {} given", n)}
-        let test = Self::new(Self::log2_floor(2 * n));
-        let b = Self::div_ceiling(test.f, 2);
+        if util::is_even(n as u32) {panic!("expected n odd, {} given", n)}
+        let test = Self::new(n);
+        let b = util::div_ceiling(test.f, 2);
         let y = Self::nroot(b + 1, n as u32, 1);
         //println!("f = {} b = {} y = {}", test.f, b, y);
         for p in Sieve::get_primes(test.f as usize) {
-            if Self::is_kth_power(&test, n as u32, p as u32, y) {
+            if test.is_kth_power( p as u32, y) {
                 return true;
             }
         }
