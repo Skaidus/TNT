@@ -8,6 +8,9 @@ pub mod number_theory {
         fn two() -> Self{
             Self::one()+Self::one()
         }
+        fn three() -> Self{
+            Self::two()+Self::one()
+        }
     }
 
 
