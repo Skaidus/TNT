@@ -12,7 +12,7 @@ mod tests {
         //98982599
         //,9984605927,999498062999,99996460031327,9999940600088207,999999594000041207,4611685283988009527,9223371593598182327
         ].into_iter();
-        assert!(iter.all(|x| Naive::is_prime(x as usize)));
+        assert!(iter.all(|x| Naive::is_prime(x)));
 
     }
 
@@ -24,7 +24,7 @@ mod tests {
         ,776161,98982601
         //,9984605929,999498063001,99996460031329,9999940600088209,999999594000041209,4611685283988009529,9223371593598182329
         ].into_iter();
-        assert!(iter.all(|x| !Naive::is_prime(x as usize)));
+        assert!(iter.all(|x| !Naive::is_prime(x)));
     }
 }
 
@@ -36,13 +36,13 @@ pub struct Naive {
 use crate::number_theory::primality::PrimalityTest;
 
 impl PrimalityTest for Naive {
-    type Int = usize;
+    type Int = u32;
     
     fn is_prime(n : Self::Int) -> bool{
         if n <= 1 {return false}
         if n <= 3 {return true}
         if n % 2 == 0 || n % 3 == 0 {return false}
-        let mut i = 5usize;
+        let mut i = 5u32;
         while i*i <= n{
             if n % i == 0 || n % (i+2) == 0 {
                 return false

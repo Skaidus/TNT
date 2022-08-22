@@ -14,6 +14,7 @@ pub mod number_theory {
 
     
     impl UnsigInt for u32{}
+    impl UnsigInt for usize{}
     pub mod primality {
         pub mod aks {
             pub mod aks_2002;
@@ -42,4 +43,5 @@ pub mod number_theory {
         }
     }
     pub mod util;
+    
 }

@@ -1,5 +1,4 @@
-use super::UnsigInt;
-
+use crate::number_theory::UnsigInt;
 pub fn log2_floor<T: UnsigInt>(k: T) -> u32 
     {
         return if k> T::one() {1 + log2_floor(k/(T::two()))} else {0}

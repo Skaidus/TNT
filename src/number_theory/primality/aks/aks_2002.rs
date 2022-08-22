@@ -35,63 +35,42 @@
 //     }
 // }
 
+use num::Integer;
+use num::integer::Roots;
+
+use crate::number_theory::primality::PrimalityTest;
+use crate::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
+use crate::number_theory::primality::naive::Naive;
+use crate::number_theory::util;
+use crate::polynomial::Poly;
+
+pub struct Aks2002 {
+
+}
 
 
-// pub struct Aks2002 {
-
-// }
-
-
-// impl PrimalityTest for Aks2002 {
-//     type Int = Integer;
+impl PrimalityTest for Aks2002 {
+    type Int = u32;
     
-//     fn is_prime(n : Self::Int) -> bool{
-//         if n.is_perfect_power() {return false}
-//         let mut s = SieveTest::new();
-//         let mut r = Integer::from(2u32);
-//         let logn = Poly::ceil_logk(&n);
-//         let limit = 4 * (logn * logn);
-//         let mut pow_mod_t;
-//         let ONE : Integer = Integer::from(1u32);
-//         while r < n {
-//             if n.is_divisible(&r){return false}
-//             let mut failed = false;
-//             if s.is_prime(&r){
-//                 let mut i = ONE.clone();
-//                 while i <= limit{
-//                     pow_mod_t = Integer::from(n.pow_mod_ref(&i, &r).unwrap()); 
-//                     if pow_mod_t == 1u32{
-//                         failed = true;
-//                         break
-//                     }
-//                     i += 1u32;
-//                 }
-//                 if !failed {break}
-//             }
-//             r += 1;
-//         }
-//         if r == n {return true}
-//         // Polynomial check
-//         let polylimit : Integer = Integer::from(r.clone().sqrt()+1u32)*2u32 * logn;
-//         let ui_r = r.to_usize_wrapping();
-//         let mut final_size = Integer::new();
-//         let mut a_int;
-//         for a in 1..=polylimit.to_usize().unwrap(){
-//             a_int = Integer::from(a);
-//             (&n % &r).complete_into(&mut final_size);
-//             let coef = final_size.to_usize_wrapping();
-//             let mut compare = Poly::with_length(coef);
-//             compare.set_coeficient(&ONE, coef);
-//             compare.set_coeficient(&a_int, 0);
-//             let mut res = Poly::with_length(ui_r);
-//             let mut base = Poly::with_length(1);
-//             base.set_coeficient(&a_int, 0);
-//             base.set_coeficient(&ONE, 1);
+    fn is_prime(n : Self::Int) -> bool{
+        if Bernstein1988::is_perfect_power(n){return false};
+        let mut r = 2u32;
+        let logn = util::log2_floor(n);
+        let logn_4 = 4 * logn;
+        while r < n {
+            if n.gcd(&r) != 1 {return false};
+            if Naive::is_prime(r){
+                let q = 1u32;
+                if q >= logn_4 * r.sqrt() {
+                    let n_pow = n.pow((r-1)/q) % r;
+                    if n_pow != 1 {break;}
+                }
+            }
+            r += 1;
+        }
+        for a in 1..2*r.sqrt()*logn {
 
-//             res.assign_pow_mod(&base, &n, &n, ui_r);
-
-//             if res != compare{return false}
-//         }
-//         true
-//     }
-// }
+        }
+        true
+    }
+}
