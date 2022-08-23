@@ -87,21 +87,38 @@ pub fn powm<T: UnsigInt>(n : T, exp : T, m : T) -> T{
 
 // Finds inverse of n (mod m)
 pub fn inv(n : usize, m : usize) -> usize{
-    let mut a = n;
-    let mut b = m;
-    let mut u  = 1isize;
-    let mut v = 0isize;
-    loop {
-        let q = a / b;
-        let t1 = a -q*b;
-        a = b;
-        b = t1;
-        let t2 = u - (q as isize) * v;
-        u = v;
-        v = t2;
-        if b != 0 {break;}
+    extended_euclidean(n, m)
+}
+
+use std::mem::swap;
+// Returns u from the extended euclid algorithm
+//https://stackoverflow.com/questions/67097428/is-it-possible-to-implement-the-extended-euclidean-algorithm-with-unsigned-machi
+pub fn extended_euclidean<T: UnsigInt>(a : T, b : T) -> T{
+    let mut r0 = a;
+    let mut r1 = b;
+    let mut s0 = T::one();
+    let mut s1 = T::zero();
+    let mut t0 = T::zero();
+    let mut t1 = T::one();
+    let mut n = 0usize;
+    while r1 > T::zero() {
+        let q = r0 / r1;
+        r0 = if r0 > q*r1 {
+            r0-q*r1
+        } else {
+            q*r1-r0
+        };
+        swap(&mut r0, &mut r1);
+        s0 = s0 + q*s1;
+        swap(&mut s0, &mut s1);
+        t0 = t0 + q*t1;
+        swap(&mut t0, &mut t1);
+        n+=1;
     }
-    if a != 1 {u=0}
-    if u < 0 {u+= m as isize}
-    u as usize
+    // gcd = r0
+    if n%2 == 0 {
+        s0 = b - s0;
+    }
+    s0
+    
 }
