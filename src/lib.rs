@@ -46,6 +46,5 @@ pub mod number_theory {
         }
     }
     pub mod util;
-    pub mod order;
     
 }
