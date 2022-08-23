@@ -1,8 +1,4 @@
 
-// use crate::number_theory::primality::{sieve::SieveTest, PrimalityTest};
-// use crate::polynomial::Poly;
-
-// use rug::{Integer, Complete};
 
 #[cfg(test)]
 mod tests {

@@ -1,4 +1,5 @@
 use std::fmt;
+use crate::number_theory::util;
 
 /// A representation of a polynomial in the ring `(x^r - 1, n)`
 pub struct Poly {
@@ -66,52 +67,6 @@ impl Poly {
         t
     }
 
-
-    // Shortcut for (n ^ exp) % m
-    fn _powm(n : usize, exp : usize, m : usize) -> usize{
-        let mut r = 1usize;
-        let mut t = n % m;
-        let mut i = exp;
-        while i != 0 {
-            if i % 2 != 0 {
-                r = Self::_umulrem(r, t, m);
-            }
-            t = Self::_umulrem(t, t, m);
-            i /= 2;
-        }
-        r
-    }
-
-    // Shortcut for (x * y) % m
-    fn _umulrem(x : usize, y : usize, m : usize) -> usize{
-        (x * y) % m
-    }
-    // Shortcut for (x * y + a) % m
-    fn _umuladdrem(x : usize, y : usize, a : usize, m : usize) -> usize{
-        (x * y + a) % m
-    }
-
-    // Finds inverse of n (mod m)
-    fn _inv(n : usize, m : usize) -> usize{
-        let mut a = n;
-        let mut b = m;
-        let mut u  = 1isize;
-        let mut v = 0isize;
-        loop {
-            let q = a / b;
-            let t1 = a -q*b;
-            a = b;
-            b = t1;
-            let t2 = u - (q as isize) * v;
-            u = v;
-            v = t2;
-            if b != 0 {break;}
-        }
-        if a != 1 {u=0}
-        if u < 0 {u+= m as isize}
-        u as usize
-    }
-
     fn _poly_square(&mut self){
         let new_degree = self.degree + self.degree;
         let mut new_coef : Vec<usize> = vec![0; new_degree+1];
@@ -120,14 +75,14 @@ impl Poly {
             if x != 0 {
                 for i in 0..j{
                     let y = 2 * self.coefficients[i];
-                    let t = Poly::_umuladdrem(x, y, new_coef[j+i], self.mod_n);
+                    let t = util::umuladdrem(x, y, new_coef[j+i], self.mod_n);
                     new_coef[j+i] = t;
                 }
             }
         }
         for i in 0..=self.degree{
             let x = self.coefficients[i];
-            let t = Poly::_umuladdrem(x, x, new_coef[2*i], self.mod_n);
+            let t = util::umuladdrem(x, x, new_coef[2*i], self.mod_n);
             new_coef[2 * i] = t;
         }
         self.degree = new_degree;
@@ -151,10 +106,10 @@ impl Poly {
 
     fn _norm(&mut self){
         if self.coefficients[self.degree] != 1 {
-            let y = Self::_inv(self.coefficients[self.degree], self.mod_n);
+            let y = util::inv(self.coefficients[self.degree], self.mod_n);
             for i in 0..=self.degree{
                 let t = self.coefficients[i];
-                self.coefficients[i] = Self::_umulrem(t, y, self.mod_n);
+                self.coefficients[i] = util::umulrem(t, y, self.mod_n);
             }
         }
     }
@@ -198,7 +153,7 @@ impl MulAssign<&Poly> for Poly {
             if x != 0 {
                 for i in 0..self.degree{
                     let y = self.coefficients[i];
-                    let t = Poly::_umuladdrem(x, y, new_coef[j+i], self.mod_n);
+                    let t = util::umuladdrem(x, y, new_coef[j+i], self.mod_n);
                     new_coef[j+i] = t;
                 }
             }

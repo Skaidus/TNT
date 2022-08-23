@@ -3,8 +3,8 @@
 pub mod polynomial;
 pub mod number_theory {
     use num::{PrimInt, Unsigned};
-    use std::{fmt::Display};
-    pub trait UnsigInt : PrimInt + Unsigned + Display {
+    use std::{fmt::Display, ops::{AddAssign, MulAssign, DivAssign, SubAssign}};
+    pub trait UnsigInt : PrimInt + Unsigned + Display + AddAssign + MulAssign + DivAssign + SubAssign{
         fn two() -> Self{
             Self::one()+Self::one()
         }
@@ -46,5 +46,6 @@ pub mod number_theory {
         }
     }
     pub mod util;
+    pub mod order;
     
 }
