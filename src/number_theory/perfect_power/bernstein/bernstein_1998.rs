@@ -26,7 +26,8 @@ mod tests {
             17689,18225,18769,19321,19881,20449,21025,21609,22201,22801,23409,24025,24649,25281, // Squared numbers
             2401, // 7^4
             3125, // 5^5
-            6561 // 3^8
+            6561, // 3^8
+            1_771_561, // 11^6
             ].into_iter();
         assert!(iter.all(|x| Bernstein1988::is_perfect_power(x)));
 
@@ -43,7 +44,8 @@ mod tests {
             17691,18227,18771,19323,19883,20451,21027,21611,22203,22803,23411,24027,24651,25283, // Squared numbers + 2
             2403, // 7^4 + 2
             3127, // 5^5 + 2
-            6563 // 3^8 + 2
+            6563, // 3^8 + 2
+            1_771_563 // 11^6 + 2
             ].into_iter();
         assert!(iter.all(|x| !Bernstein1988::is_perfect_power(x)));
     }
@@ -104,8 +106,8 @@ impl Bernstein1988 {
 
     // Power up to b bits
     // n**k mod 2**b
-    fn pow_2<U: UnsigInt>(b: u32, x: U, k: u32) -> U {
-        x.pow(k) % U::two().pow(b)
+    fn pow_2<U: UnsigInt>(b: u32, x: U, k: U) -> U {
+        util::powm(x, k, U::two().pow(b))
         //Self::power(x, k, 2u32.pow(b))
     }
 
