@@ -1,6 +1,7 @@
 
 
 pub mod polynomial;
+pub mod polynomialB;
 pub mod number_theory {
     use num::{PrimInt, Unsigned};
     use std::{fmt::Display, ops::{AddAssign, MulAssign, DivAssign, SubAssign}};
