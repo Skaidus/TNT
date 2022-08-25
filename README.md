@@ -6,7 +6,7 @@ TNT also has a wide variety of tests that check the correctness of the implement
 Here is the list of certificates that TNT provides:
 
 * **Primality:** whether the input is a prime number.
-  * [AKS 2002](https://cse.iitk.ac.in/users/manindra/algebra/primality_original.pdf) (in progress)
+  * [AKS 2002](https://cse.iitk.ac.in/users/manindra/algebra/primality_original.pdf)
   * [AKS 2003](https://www.cse.iitk.ac.in/users/manindra/algebra/primality_v6.pdf) (in progress)
   * [AKS 2005](https://math.dartmouth.edu/~carlp/PDF/complexity12.pdf) (in progress)
 * **Prime Sieves:** returns an ordered list of primes below the input.
