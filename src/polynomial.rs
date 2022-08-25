@@ -54,6 +54,7 @@ impl Poly {
         }
         let mut t = self.clone();
         i = er;
+        println!("t = {}", t);
         while i != 1{
             t._poly_square();
             t._mod();
@@ -90,6 +91,7 @@ impl Poly {
     }
 
     fn _mod(&mut self){
+        println!("degree {}, coef {:?}, me {}", self.degree, self.coefficients,self);
         let mut new_degree = self.degree;
         while new_degree >= self.mod_r {
             self.coefficients[new_degree - self.mod_r] += self.coefficients[new_degree];

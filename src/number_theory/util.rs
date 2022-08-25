@@ -1,4 +1,4 @@
-use num::{range, range_step, range_step_inclusive};
+use num::{ range_step_inclusive};
 
 use crate::number_theory::UnsigInt;
 pub fn log2_floor<T: UnsigInt>(k: T) -> u32 
@@ -49,7 +49,7 @@ pub fn phi<T: UnsigInt>(n : T) -> T
     let mut n = n;
     let mut i = T::two();
     while i*i <= n {
-        if(n%i == T::zero()){
+        if n%i == T::zero(){
             while n % i == T::zero() {
                 n /= i;
             }
