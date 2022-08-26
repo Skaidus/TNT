@@ -66,14 +66,9 @@ impl Poly {
     }
 
     pub fn set_coef(&mut self, new_coef : usize, i : usize){
-        if i < 0  {
-            println!("coef is less than 0\n");
-        } 
         if i > self.degree {
             self.coefficients.resize(i+1, 0);
             self.degree = i;
-        } else {
-            self.coefficients[i] = new_coef;
         }
         self.coefficients[i] = new_coef;
     }
@@ -165,6 +160,85 @@ impl Poly {
     //     let log_pow = util::log2_floor(power);
     //     for i in (0..=log_pow).rev(){
     //         res.mod_square();
+    //         if (power >> i) & 1 == 1 {
+    //             res.mod_mult(self);
+    //         }
+    //         if i == 0 {break}
+    //     }
+    //     res.compact();
+    //     res
+    // }
+
+    // pub fn mod_pow(&self, power : u32) -> Self{
+    //     let mut res = Self::allocate(self.mod_r, self.mod_n);
+    //     res.set_coef(1, 0);
+    //     let mut base = self.clone();
+    //     let mut power = power;
+    //     while power > 0 {
+    //         if power % 2 == 1 {
+    //             res.mod_mult(&base);
+    //         }
+    //         base.mod_square();
+    //         power /= 2;
+    //     }
+    //     res.compact();
+    //     res
+    pub fn mod_pow(&self, power : u32) -> Self{
+        let mut res = Self::allocate(self.mod_r, self.mod_n);
+        res.set_coef(1, 0);
+
+        let mut a = self.clone();
+        let mut power = power;
+        while power > 0 {
+            res.mod_square();
+            if (power & 1) == 1 {
+                res.mod_mult(&a);
+            }
+            power >>= 1;
+        }
+        res.compact();
+        println!("{:?}", res.coefficients);
+        res
+        // let mut res = Self::allocate(self.mod_r, self.mod_n);
+        // res.set_coef(1, 0);
+
+        // let mut a = self.clone();
+        // let mut power = power;
+        // while power > 0 {
+        //     if (power & 1) == 1 {
+        //         res.mod_mult(&a);
+        //     }
+        //     a.mod_square();
+        //     power >>= 1;
+        // }
+        // res.compact();
+        // res
+        // res.set_coef(1, 0);
+        // let log_pow = util::log2_floor(power);
+        // for i in (0..=log_pow).rev(){
+        //     res.mod_square();
+        //     if (power >> i) & 1 == 1 {
+        //         res.mod_mult(self);
+        //     }
+        //     if i == 0 {break}
+        // }
+        // res.compact();
+        // res
+    }
+
+
+    // pub fn mod_pow(&self, power : u32) -> Self{
+    //     let mut res = Self::allocate(self.mod_r, self.mod_n);
+    //     res.set_coef(1, 0);
+    //     // let mut q = power;
+    //     // while q > 0 {
+    //     //     if q % 2 == 1{
+    //     //         res.mod_mult(self);
+    //     //     }
+    //     //     res.mod_square();
+    //     // }
+    //     for i in (0..=log_pow).rev(){
+    //         res.mod_square();
     //         if (log_pow >> i) & 1 == 1 {
     //             res.mod_mult(self);
     //         }
@@ -173,26 +247,6 @@ impl Poly {
     //     res.compact();
     //     res
     // }
-    pub fn mod_pow(&self, power : u32) -> Self{
-        let mut res = Self::allocate(self.mod_r, self.mod_n);
-        res.set_coef(1, 0);
-        // let mut q = power;
-        // while q > 0 {
-        //     if q % 2 == 1{
-        //         res.mod_mult(self);
-        //     }
-        //     res.mod_square();
-        // }
-        for i in (0..=log_pow).rev(){
-            res.mod_square();
-            if (log_pow >> i) & 1 == 1 {
-                res.mod_mult(self);
-            }
-            if i == 0 {break}
-        }
-        res.compact();
-        res
-    }
 
     
 

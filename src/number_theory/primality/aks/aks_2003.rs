@@ -7,7 +7,7 @@ mod tests {
     #[test]
     fn recognizes_primes(){
         let mut iter : IntoIter<u32>  = vec![2, 3, 5, 7, 11,//, 13, 17, 19
-        //1693,
+        1693,
         1697,
 
         //,1693, 1697, 1699, 1709, 1721, 1723, 1733, 1741, 1747, 1753, 1759, 1777, 1783, 1787, 1789, 1801, 1811, 1823, 1831, 1847, 1861, 1867, 1871, 1873, 1877, 1879, 1889, 1901, 1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, 1993, 1997, 1999, 2003, 2011, 2017, 2027, 2029, 2039, 13513, 13523, 13537, 13553, 13567, 13577, 13591, 13597, 13613, 13619, 13627, 13633, 13649, 13669, 13679, 13681, 13687, 13691, 13693, 24631, 24659, 24671, 24677, 24683, 24691, 24697, 24709, 24733, 24749, 24763, 24767, 24781, 24793, 24799, 24809, 24821, 24841, 24847, 24851, 24859, 24877, 24889, 28591, 28597, 28603, 28607, 28619, 28621, 28627, 28631, 28643, 28649, 28657, 28661
@@ -66,6 +66,20 @@ impl Aks2003 {
         r-1u32
     }
 
+    fn multiplicative_order(&self, r : u32) -> u32{
+        let mut k = 0u32;
+        let mut result = 0;
+        loop {
+            k +=1;
+            let res = util::powm(self.n, k, r);
+            if res != 1 && r > k {
+                break;
+            }
+        }
+        if r
+
+    }
+
     fn new( n : u32) -> Aks2003{
         Aks2003 {n, logn: util::log2_floor(n)}
     }
@@ -121,17 +135,25 @@ impl PrimalityTest for Aks2003 {
         
         let r_u = r as usize;
         let n_u = n as usize;
-        x_n.set_coef(1, n_u); // x^(n mod r), original paper used x^n
+        x_n.set_coef(1, n_mod_r); // x^(n mod r), original paper used x^n
         println!("{}", x_n);
         println!("1: x^n: {}", x_n);
         for a in 1..util::phi(r).sqrt()*test.logn {
             let mut poly = Poly::new(r_u, n_u);
-            poly -= a.try_into().unwrap();
-            poly = poly.mod_pow(n);
             poly += a.try_into().unwrap();
-            println!("a = {}: (x-a)^n: {}",a, poly);
+            poly = poly.mod_pow(n);
+            poly -= a.try_into().unwrap();
+            println!("a = {}: (x+a)^n: {}",a, poly);
             if poly != x_n {return false}
         }
+        // for a in 1..util::phi(r).sqrt()*test.logn {
+        //     let mut poly = Poly::new(r_u, n_u);
+        //     poly -= a.try_into().unwrap();
+        //     poly = poly.mod_pow(n);
+        //     poly += a.try_into().unwrap();
+        //     println!("a = {}: (x-a)^n: {}",a, poly);
+        //     if poly != x_n {return false}
+        // }
         true
     }
 }
