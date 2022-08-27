@@ -56,12 +56,11 @@
 //         }
 //     }
 
-use aks_primes::polynomialB::Poly;
+use aks_primes::number_theory::primality::{aks::aks_2003, PrimalityTest};
 
 fn main() {
-    let p = Poly::new(3, 5);
-    let p = p.mod_pow(7);
-    println!("{}",p);
+    aks_2003::Aks2003::is_prime(2039);
+
 }
 
 // nat log: https://stackoverflow.com/questions/70688941/how-to-calculate-integer-logarithm-of-base-3-using-fast-bit-operations

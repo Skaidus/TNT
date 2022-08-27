@@ -68,6 +68,28 @@ impl Poly {
         t
     }
 
+    // fn _poly_square(&mut self){
+    //     let new_degree = self.degree + self.degree;
+    //     let mut new_coef : Vec<usize> = vec![0; new_degree+1];
+    //     for j in 1..=self.degree{
+    //         let x = self.coefficients[j];
+    //         if x != 0 {
+    //             for i in 0..j{
+    //                 let y = 2 * self.coefficients[i];
+    //                 let t = util::umuladdrem(x, y, new_coef[j+i], self.mod_n);
+    //                 new_coef[j+i] = t;
+    //             }
+    //         }
+    //     }
+    //     for i in 0..=self.degree{
+    //         let x = self.coefficients[i];
+    //         let t = util::umuladdrem(x, x, new_coef[2*i], self.mod_n);
+    //         new_coef[2 * i] = t;
+    //     }
+    //     self.degree = new_degree;
+    //     self.coefficients = new_coef;
+    // }
+
     fn _poly_square(&mut self){
         let new_degree = self.degree + self.degree;
         let mut new_coef : Vec<usize> = vec![0; new_degree+1];

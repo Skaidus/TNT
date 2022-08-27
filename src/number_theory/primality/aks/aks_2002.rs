@@ -92,9 +92,9 @@ impl PrimalityTest for Aks2002 {
         let n_u = n as usize;
         for a in 1..2*r.sqrt()*logn {
             let mut poly = Poly::new(r_u, n_u);
-            poly -= a.try_into().unwrap();
-            poly = poly.mod_pow(n);
             poly += a.try_into().unwrap();
+            poly = poly.mod_pow(n);
+            poly -= a.try_into().unwrap();
             println!("a = {}: (x-a)^n: {}",a, poly);
             if poly != x_n {return false}
         }

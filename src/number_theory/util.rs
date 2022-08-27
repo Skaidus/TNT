@@ -1,11 +1,21 @@
 use num::{ range_step_inclusive};
 
 use crate::number_theory::UnsigInt;
+// n digits k in base 2 = floor(log2(k)) + 1 = ceil(log2(k+1))
 pub fn log2_floor<T: UnsigInt>(k: T) -> u32 
     {
         return if k> T::one() {1 + log2_floor(k/(T::two()))} else {0}
         
     }
+
+// 
+pub fn log2_ceil<T: UnsigInt>(k: T) -> u32 
+{
+    return log2_floor(k-T::one()) + 1
+    
+}
+
+
 
 pub fn is_even<T: UnsigInt>(k : T) -> bool
 {

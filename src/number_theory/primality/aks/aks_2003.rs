@@ -31,57 +31,72 @@ mod tests {
     }
 }
 
-use num::Integer;
+use num::{Integer, ToPrimitive};
 use num::integer::Roots;
 
 use crate::number_theory::primality::PrimalityTest;
 use crate::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
 use crate::number_theory::util;
-use crate::polynomialB::Poly;
+use crate::polynomial::Poly;
 
 pub struct Aks2003 {    
     n : u32,
-    logn : u32
+    logn : f64,
+    logn_floor : u32
 }
 
 
 impl Aks2003 {
+    // fn get_r(&self) -> u32{
+    //     let max_k = self.logn.pow(2);
+    //     let max_r = self.logn.pow(5).max(3u32);
+    //     let mut next_r = true;
+    //     let mut r = 2u32;
+    //     let mut k;
+    //     let mut n_pow_k_mod_r;
+    //     while next_r && r < max_r {
+    //         next_r = false;
+    //         k = 1u32;
+    //         while !next_r && k <= max_k {
+    //             n_pow_k_mod_r = util::powm(self.n, k, r);
+    //             next_r = n_pow_k_mod_r == 1u32 || n_pow_k_mod_r == 0; 
+    //             k+=1u32;
+    //         }
+    //         r+=1u32;
+    //     }
+    //     r-1u32
+    // }
+
     fn get_r(&self) -> u32{
-        let max_k = self.logn.pow(2);
-        let max_r = self.logn.pow(5).max(3u32);
-        let mut next_r = true;
-        let mut r = 2u32;
+        let log2 = self.logn*self.logn;
         let mut k;
-        let mut n_pow_k_mod_r;
-        while next_r && r < max_r {
-            next_r = false;
-            k = 1u32;
-            while !next_r && k <= max_k {
-                n_pow_k_mod_r = util::powm(self.n, k, r);
-                next_r = n_pow_k_mod_r == 1u32 || n_pow_k_mod_r == 0; 
-                k+=1u32;
+        let mut r = 1;
+        loop {
+            r +=1;
+            k = self.multiplicative_order(r);
+            if k > log2{
+                return r
             }
-            r+=1u32;
         }
-        r-1u32
     }
 
-    fn multiplicative_order(&self, r : u32) -> u32{
-        let mut k = 0u32;
-        let mut result = 0;
-        loop {
-            k +=1;
-            let res = util::powm(self.n, k, r);
-            if res != 1 && r > k {
-                break;
+    fn multiplicative_order(&self, r : u32) -> f64{
+        let mut res = 1;
+        let mut k = 1;
+        let mut k_f = 1f64;
+        while k < r {
+            res = (res*self.n) % r;
+            if res == 1{
+                return k_f;
             }
+            k += 1;
+            k_f += 1.0;
         }
-        if r
-
+        0f64
     }
 
     fn new( n : u32) -> Aks2003{
-        Aks2003 {n, logn: util::log2_floor(n)}
+        Aks2003 {n, logn: f64::from(n).log2(), logn_floor: util::log2_floor(n) }
     }
 }
 
@@ -91,6 +106,7 @@ impl PrimalityTest for Aks2003 {
     
     fn is_prime(n : Self::Int) -> bool{
         if n <= 3 {return true}
+        let a =n.to_f64().unwrap().log2();
         if n % 2u32 == 0 {return false}
         if Bernstein1988::is_perfect_power(n){return false};
         let test = Aks2003::new(n);
@@ -100,60 +116,44 @@ impl PrimalityTest for Aks2003 {
             if gcd > 1 && gcd < n {return false};
         }
         if n <= r {return true}
-        // let x_n = Poly::new(r as usize, n as usize)
-        //         .pow(n); // x^n
-        // for a in 1..util::phi(r).sqrt()*test.logn {
-        //     let mut poly = Poly::new(r as usize, n as usize);
-        //     poly -= a.try_into().unwrap();
-        //     poly = poly.pow(n);
-        //     poly += a.try_into().unwrap(); // (x - a)^n + a
-        //     if poly != x_n {return false}
-        // }
+        let x_n = Poly::new(r as usize, n as usize)
+                .pow(n); // x^n
+        for a in 1..util::phi(r).sqrt()*test.logn_floor {
+            let mut poly = Poly::new(r as usize, n as usize);
+            poly += a.try_into().unwrap();
+            poly = poly.pow(n);
+            poly -= a.try_into().unwrap(); // (x - a)^n + a
+            if poly != x_n {return false}
+        }
+
+
+
+
         // let n_mod_r = (n%r) as usize;
         // let mut x_n = Poly::with_capacity(n_mod_r, r as usize, n as usize);
 
         
         
+        
+        // let n_mod_r = (n%r) as usize;
+        // let mut x_n = Poly::with_capacity(n_mod_r, r as usize, n as usize);
+
+        // println!("n = {}", n);
+        
         // let r_u = r as usize;
         // let n_u = n as usize;
-        // x_n.set_coef(1, n_u); // x^(n mod r), original paper used x^n
+        // x_n.set_coef(1, n_mod_r); // x^(n mod r), original paper used x^n
         // println!("{}", x_n);
         // println!("1: x^n: {}", x_n);
-        // for a in 1..util::phi(r).sqrt()*test.logn {
+        // for a in 1..util::phi(r).sqrt()*test.logn_floor {
         //     let mut poly = Poly::new(r_u, n_u);
-        //     poly -= a.try_into().unwrap();
-        //     poly = poly.mod_pow(n);
         //     poly += a.try_into().unwrap();
-        //     println!("a = {}: (x-a)^n: {}",a, poly);
+        //     poly = poly.mod_pow(n);
+        //     poly -= a.try_into().unwrap();
+        //     println!("a = {}: (x+a)^n: {}",a, poly);
         //     if poly != x_n {return false}
         // }
-        // true
-        let n_mod_r = (n%r) as usize;
-        let mut x_n = Poly::with_capacity(n_mod_r, r as usize, n as usize);
 
-        println!("n = {}", n);
-        
-        let r_u = r as usize;
-        let n_u = n as usize;
-        x_n.set_coef(1, n_mod_r); // x^(n mod r), original paper used x^n
-        println!("{}", x_n);
-        println!("1: x^n: {}", x_n);
-        for a in 1..util::phi(r).sqrt()*test.logn {
-            let mut poly = Poly::new(r_u, n_u);
-            poly += a.try_into().unwrap();
-            poly = poly.mod_pow(n);
-            poly -= a.try_into().unwrap();
-            println!("a = {}: (x+a)^n: {}",a, poly);
-            if poly != x_n {return false}
-        }
-        // for a in 1..util::phi(r).sqrt()*test.logn {
-        //     let mut poly = Poly::new(r_u, n_u);
-        //     poly -= a.try_into().unwrap();
-        //     poly = poly.mod_pow(n);
-        //     poly += a.try_into().unwrap();
-        //     println!("a = {}: (x-a)^n: {}",a, poly);
-        //     if poly != x_n {return false}
-        // }
         true
     }
 }

@@ -259,7 +259,7 @@ impl Clone for Poly {
         for i in 0..=self.degree{
             coefficients[i] = self.coefficients[i];
         }
-        Poly {mod_r : self.mod_n, mod_n :self.mod_n,  coefficients , degree : self.degree}
+        Poly {mod_r : self.mod_r, mod_n :self.mod_n,  coefficients , degree : self.degree}
     }
 }
 
