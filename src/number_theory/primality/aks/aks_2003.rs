@@ -37,7 +37,6 @@ use num::integer::Roots;
 use crate::number_theory::primality::PrimalityTest;
 use crate::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
 use crate::number_theory::util;
-use crate::polynomial::Poly;
 
 pub struct Aks2003 {    
     n : u32,
@@ -100,7 +99,7 @@ impl Aks2003 {
     }
 }
 
-
+use crate::polywrap;
 impl PrimalityTest for Aks2003 {
     type Int = u32;
     
@@ -116,44 +115,6 @@ impl PrimalityTest for Aks2003 {
             if gcd > 1 && gcd < n {return false};
         }
         if n <= r {return true}
-        let x_n = Poly::new(r as usize, n as usize)
-                .pow(n); // x^n
-        for a in 1..util::phi(r).sqrt()*test.logn_floor {
-            let mut poly = Poly::new(r as usize, n as usize);
-            poly += a.try_into().unwrap();
-            poly = poly.pow(n);
-            poly -= a.try_into().unwrap(); // (x - a)^n + a
-            if poly != x_n {return false}
-        }
-
-
-
-
-        // let n_mod_r = (n%r) as usize;
-        // let mut x_n = Poly::with_capacity(n_mod_r, r as usize, n as usize);
-
-        
-        
-        
-        // let n_mod_r = (n%r) as usize;
-        // let mut x_n = Poly::with_capacity(n_mod_r, r as usize, n as usize);
-
-        // println!("n = {}", n);
-        
-        // let r_u = r as usize;
-        // let n_u = n as usize;
-        // x_n.set_coef(1, n_mod_r); // x^(n mod r), original paper used x^n
-        // println!("{}", x_n);
-        // println!("1: x^n: {}", x_n);
-        // for a in 1..util::phi(r).sqrt()*test.logn_floor {
-        //     let mut poly = Poly::new(r_u, n_u);
-        //     poly += a.try_into().unwrap();
-        //     poly = poly.mod_pow(n);
-        //     poly -= a.try_into().unwrap();
-        //     println!("a = {}: (x+a)^n: {}",a, poly);
-        //     if poly != x_n {return false}
-        // }
-
-        true
+        unsafe{polywrap::aks_theorem(n, r, util::phi(r).sqrt()*test.logn_floor)}
     }
 }

@@ -1,0 +1,1 @@
+extern "C" static bool aks_theorem(unsigned int n, unsigned int r, unsigned int s);
