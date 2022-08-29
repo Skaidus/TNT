@@ -24,6 +24,7 @@ pub mod number_theory {
         pub mod aks {
             pub mod aks_2002;
             pub mod aks_2003;
+            pub mod aks_bernstein;
             pub mod aks_2005;
         }
         pub mod naive;

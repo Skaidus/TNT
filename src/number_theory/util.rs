@@ -1,4 +1,4 @@
-use num::{ range_step_inclusive};
+use num::{ range_step_inclusive, range};
 
 use crate::number_theory::UnsigInt;
 // n digits k in base 2 = floor(log2(k)) + 1 = ceil(log2(k+1))
@@ -13,6 +13,17 @@ pub fn log2_ceil<T: UnsigInt>(k: T) -> u32
 {
     return log2_floor(k-T::one()) + 1
     
+}
+
+pub fn nCk<T: UnsigInt>(n : T, k: T) -> T 
+{
+    let mut res = T::one();
+    let k = if k > n - k {n-k} else {k};
+    for i in range(T::zero(),k){
+        res *= (n - i);
+        res /= (i + T::one());
+    }
+    res
 }
 
 
