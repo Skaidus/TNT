@@ -8,6 +8,7 @@ Here is the list of certificates that TNT provides:
 * **Primality:** whether the input is a prime number.
   * [AKS 2002](https://cse.iitk.ac.in/users/manindra/algebra/primality_original.pdf)
   * [AKS 2003](https://www.cse.iitk.ac.in/users/manindra/algebra/primality_v6.pdf) (in progress)
+  * [AKS Bernstein](https://cr.yp.to/papers/aks-20030125-retypeset20220327.pdf#page=8) (in progress)
   * [AKS 2005](https://math.dartmouth.edu/~carlp/PDF/complexity12.pdf) (in progress)
 * **Prime Sieves:** returns an ordered list of primes below the input.
   * [Sieve of Eratosthenes](https://cp-algorithms.com/algebra/sieve-of-eratosthenes.html#implementation)
