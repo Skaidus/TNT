@@ -46,11 +46,11 @@ pub struct AksBernstein {
 
 
 impl AksBernstein {
-    fn get_aks_bound(&self) -> u32{
+    fn get_aks_bound(&self) -> (u32, u32){
         let mut r = 3u32;
         let mut s = 0;
         while r < self.n{
-            if n.gcd(&r) !=1 {return 0u32}
+            if self.n.gcd(&r) !=1 {return (0u32, 0u32)}
             if Naive::is_prime(r){
                 let q = util::largest_prime_factor(r);
                 s = 2*r.sqrt()*self.logn_floor;
@@ -60,7 +60,7 @@ impl AksBernstein {
             }
             r += 1;
         }
-        s
+        (r,s)
     }
 
     fn new( n : u32) -> AksBernstein{
@@ -70,7 +70,6 @@ impl AksBernstein {
 
 use crate::polywrap;
 use crate::number_theory::primality::naive::Naive;
-use crate::number_theory::util;
 impl PrimalityTest for AksBernstein {
     type Int = u32;
     
@@ -80,6 +79,8 @@ impl PrimalityTest for AksBernstein {
         if n % 2u32 == 0 {return false}
         if Bernstein1988::is_perfect_power(n){return false};
         let test = AksBernstein::new(n);
-        unsafe{polywrap::aks_theorem(n, r, test.get_aks_bound())}
+        let res = test.get_aks_bound();
+        if res.0 == 0 {return false}
+        unsafe{polywrap::aks_theorem(n, res.0, res.1)}
     }
 }

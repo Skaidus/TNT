@@ -1,26 +1,30 @@
-#include <NTL/ZZ_pX.h>
+//#include <NTL/ZZ_pX.h>
+#include "../gmp-6.2.1/gmpxx.h"
 #include <math.h>
 
 extern "C" {
     static bool aks_theorem(unsigned int n, unsigned int r, unsigned int s){
-        ZZ_p::init(to_ZZ(n));
-        ZZ_pX f(r, 1); f -= 1;
-        const ZZ_pXModulus pf(f);
+        // ZZ_p::init(to_ZZ(n));
+        // ZZ_pX f(r, 1); f -= 1;
+        // const ZZ_pXModulus pf(f);
 
-        ZZ_pX rPoly(1, 1);				// x
-        PowerMod(rPoly, rPoly, n, pf);	// x^n
-        unsigned int a;
-        for (a = 1; a <= s; ++a)
-        {
-            ZZ_pX lPoly(1, 1);	// x
-            lPoly -= a;			// x - a
-            PowerMod(lPoly, lPoly, n, pf);	// (x - a)^n
-            lPoly += a;			// (x - a)^n + a
-            if (lPoly != rPoly)
-            {
-                return false;
-            }
-        }
+        // ZZ_pX rPoly(1, 1);				// x
+        // PowerMod(rPoly, rPoly, n, pf);	// x^n
+        // unsigned int a;
+        // for (a = 1; a <= s; ++a)
+        // {
+        //     ZZ_pX lPoly(1, 1);	// x
+        //     lPoly -= a;			// x - a
+        //     PowerMod(lPoly, lPoly, n, pf);	// (x - a)^n
+        //     lPoly += a;			// (x - a)^n + a
+        //     if (lPoly != rPoly)
+        //     {
+        //         return false;
+        //     }
+        // }
+        mpz_t a, b;
+        mpz_init(a);
+        mpz_init(b);
         return true;
     }
 }
