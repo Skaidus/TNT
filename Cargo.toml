@@ -6,6 +6,8 @@ license = "MIT"
 description = "A Rust implementation of AKS Primality Test"
 repository = "https://github.com/Skaidus/AKS_Primes"
 readme = "README.md"
+links = "foo"
+build = "build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [profile.release]
@@ -13,6 +15,7 @@ debug = 1
 
 [dependencies]
 num = "0.4.0"
+cxx = "1.0"
 
 [build-dependencies]
-cc = "1.0"
+cxx-build = "1.0"

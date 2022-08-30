@@ -57,9 +57,20 @@
 //     }
 
 use aks_primes::number_theory::primality::{aks::aks_2003, PrimalityTest};
+//use aks_primes::polywrap;
+
+#[cxx::bridge]
+mod ffi {
+    unsafe extern "C++" {
+        include!("aks_primes/include/aks_theorem.h");
+        fn aks_theorem(n : u32, r : u32, s : u32) -> bool;
+    }
+}
+
 
 fn main() {
-    aks_2003::Aks2003::is_prime(2039);
+    //aks_2003::Aks2003::is_prime(2039);
+    ffi::aks_theorem(1,2,3);
 
 }
 
