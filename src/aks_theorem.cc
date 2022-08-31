@@ -1,13 +1,5 @@
 #include "aks_primes/include/aks_theorem.h"
 
-//#include <gmpxx.h>
-// #include <math.h>
-
-
-//#include<aks_theorem.h>
-//#include "../include/aks_theorem.h"
-#include<iostream>
-
 using namespace std;
 using namespace NTL;
 
@@ -30,6 +22,5 @@ bool aks_theorem(unsigned int n, unsigned int r, unsigned int s){
                 return false;
             }
         }
-        cout<<"Welcome to Online IDE!! Happy Coding :)";
         return true;
 }
