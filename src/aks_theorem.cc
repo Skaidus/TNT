@@ -1,9 +1,10 @@
-#include <NTL/ZZ_pX.h>
+#include "aks_primes/include/aks_theorem.h"
+
 //#include <gmpxx.h>
 // #include <math.h>
 
-//#include "aks_primes/include/aks_theorem.h"
-#include<aks_theorem.h>
+
+//#include<aks_theorem.h>
 //#include "../include/aks_theorem.h"
 #include<iostream>
 

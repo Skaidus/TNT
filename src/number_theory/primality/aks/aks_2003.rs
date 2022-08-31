@@ -115,7 +115,6 @@ impl PrimalityTest for Aks2003 {
             if gcd > 1 && gcd < n {return false};
         }
         if n <= r {return true}
-        //unsafe{polywrap::aks_theorem(n, r, util::phi(r).sqrt()*test.logn_floor)}
-        true
+        polywrap::ffi::aks_theorem(n, r, util::phi(r).sqrt()*test.logn_floor)
     }
 }
