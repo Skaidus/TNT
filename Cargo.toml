@@ -20,7 +20,3 @@ cxx = "1.0.32"
 [build-dependencies]
 cxx-build = "1.0.32"
 
-[build-env]
-NTL_INCLUDE = "output/include/NTL"
-NTL_LIB_PATH = "output/lib"
-GMP_LIB_PATH = "output/lib"

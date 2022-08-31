@@ -20,7 +20,7 @@ cd ..
 wget https://shoup.net/ntl/ntl-$NTL_VERSION.tar.gz
 tar xf ntl-$NTL_VERSION.tar.gz
 cd ntl-$NTL_VERSION/src
-./configure NTL_GF2X_LIB=on DEF_PREFIX="$PREFIX" NATIVE=off
+./configure NTL_GF2X_LIB=off DEF_PREFIX="$PREFIX" NATIVE=off
 make -j "$(nproc)"
 make install
 popd

@@ -40,36 +40,11 @@ fn main() {
     println!("cargo:rerun-if-changed=include/aks_theorem.h");
     println!("cargo:rerun-if-changed=src/aks_theorem.cc");
     let mut link_type = "static";
-    println!("cargo:rerun-if-env-changed=STATIC_LIBS");
-    println!("cargo:rerun-if-env-changed=NTL_LIB_PATH");
-    //println!("cargo:rerun-if-env-changed=DELSUM_GF2X_LIB_PATH");
-    println!("cargo:rerun-if-env-changed=GMP_LIB_PATH");
-    println!("cargo:rerun-if-env-changed=NTL_INCLUDE");
     let mut build = cxx_build::bridge("src/polywrap.rs");
-    for (key, value) in std::env::vars() {
-        println!("{}", key);
-        match key.as_str() {
-            "DELSUM_STATIC_LIBS" => {
-                if value == "1" {
-                    link_type = "static";
-                }
-            },
-            "DELSUM_NTL_LIB_PATH" | "DELSUM_GMP_LIB_PATH" => {
-                println!("cargo:rustc-link-search=native={}", value);
-            },
-            "DELSUM_NTL_INCLUDE" => {
-                build.include(value);
-            },
-            _ => continue,
-        }
-    }
-    
     println!("cargo:rustc-link-search=native=output/lib");
-    println!("cargo:rustc-link-lib={}=gmp", link_type);
-    println!("cargo:rustc-link-lib={}=ntl", link_type);
+    println!("cargo:rustc-link-lib=static=gmp");
+    println!("cargo:rustc-link-lib=static=ntl");
     build.include("output/include");
-    // gmp is required for thread safety apparently?
-    
     build
         // needed for NTL
         .flag_if_supported("-fpermissive")
