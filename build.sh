@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# Credits to https://crates.io/crates/delsum
 set -eu -o pipefail
 
 GMP_VERSION=6.2.1
@@ -24,12 +24,3 @@ cd ntl-$NTL_VERSION/src
 make -j "$(nproc)"
 make install
 popd
-
-
-# aksenv=$PWD
-# cd gmp
-# ../gmp-6.2.1/configure
-# cd ../ntl-11.5.1/src
-# ./configure PREFIX="$aksenv/ntl" GMP_PREFIX="$aksenv/gmp"
-# make
-# make install
