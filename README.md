@@ -16,3 +16,11 @@ Here is the list of certificates that TNT provides:
 * **Perfect Power Detection:** mostly algorithms by Daniel J. Bernstein.
   * [Detecting Perfect Powers in Essentially Linear Time](https://www.ams.org/journals/mcom/1998-67-223/S0025-5718-98-00952-1/S0025-5718-98-00952-1.pdf).
   * [Detecting perfect powers by factoring into coprimes](https://cr.yp.to/lineartime/powers2-20060914-ams.pdf) (in progress)
+
+## Usage
+
+TNT uses some GNU libraries, specifically `GMP`, `NTL` and `GF2X`. This crates includes a script that must be run in order to fetch those dependencies. Before it:
+
+```bash
+./config.sh
+```
