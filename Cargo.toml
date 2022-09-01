@@ -1,13 +1,14 @@
 [package]
-name = "aks_primes"
+name = "tnt-lib"
 version = "0.1.1"
 edition = "2021"
 license = "MIT"
-description = "A Rust implementation of AKS Primality Test"
+description = "A Rust implementation of many certificates about Integers"
 repository = "https://github.com/Skaidus/AKS_Primes"
 readme = "README.md"
 links = "NTL"
 build = "build.rs"
+keywords = ["AKS", "Primality", "Number theory", "Bernstein", "Cryptography"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [profile.release]
