@@ -31,9 +31,9 @@ mod tests {
     }
 }
 
-use num::{Integer, ToPrimitive};
+use super::aks_theorem;
+use num::Integer;
 use num::integer::Roots;
-
 use crate::number_theory::primality::PrimalityTest;
 use crate::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
 use crate::number_theory::util;
@@ -46,25 +46,6 @@ pub struct Aks2003 {
 
 
 impl Aks2003 {
-    // fn get_r(&self) -> u32{
-    //     let max_k = self.logn.pow(2);
-    //     let max_r = self.logn.pow(5).max(3u32);
-    //     let mut next_r = true;
-    //     let mut r = 2u32;
-    //     let mut k;
-    //     let mut n_pow_k_mod_r;
-    //     while next_r && r < max_r {
-    //         next_r = false;
-    //         k = 1u32;
-    //         while !next_r && k <= max_k {
-    //             n_pow_k_mod_r = util::powm(self.n, k, r);
-    //             next_r = n_pow_k_mod_r == 1u32 || n_pow_k_mod_r == 0; 
-    //             k+=1u32;
-    //         }
-    //         r+=1u32;
-    //     }
-    //     r-1u32
-    // }
 
     fn get_r(&self) -> u32{
         let log2 = self.logn*self.logn;
@@ -99,13 +80,12 @@ impl Aks2003 {
     }
 }
 
-use crate::polywrap;
+
 impl PrimalityTest for Aks2003 {
     type Int = u32;
     
     fn is_prime(n : Self::Int) -> bool{
         if n <= 3 {return true}
-        let a =n.to_f64().unwrap().log2();
         if n % 2u32 == 0 {return false}
         if Bernstein1988::is_perfect_power(n){return false};
         let test = Aks2003::new(n);
@@ -115,6 +95,6 @@ impl PrimalityTest for Aks2003 {
             if gcd > 1 && gcd < n {return false};
         }
         if n <= r {return true}
-        polywrap::ffi::aks_theorem(n, r, util::phi(r).sqrt()*test.logn_floor)
+        aks_theorem::ffi::aks_theorem(n, r, util::phi(r).sqrt()*test.logn_floor)
     }
 }

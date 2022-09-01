@@ -41,8 +41,7 @@ use crate::number_theory::primality::PrimalityTest;
 use crate::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
 use crate::number_theory::primality::naive::Naive;
 use crate::number_theory::util;
-use crate::polynomialB::Poly;
-
+use super::aks_theorem;
 pub struct Aks2002 {
 
 }
@@ -70,34 +69,6 @@ impl PrimalityTest for Aks2002 {
             r += 1;
         }
         if r == n {return true} // From: https://www.cs.cmu.edu/afs/cs/user/mjs/ftp/thesis-program/2005/rotella.pdf
-        // let x_n = Poly::new(r as usize, n as usize);
-        // println!("{}", x_n);
-        // let x_n = x_n.pow(n%r); // x^(n mod r), original paper used x^n
-        // println!("1: x^n: {}", x_n);
-        // for a in 1..2*r.sqrt()*logn {
-        //     let mut poly = Poly::new(r as usize, n as usize);
-        //     poly -= a.try_into().unwrap();
-        //     println!("a = {}: (x-a)^n: {}",a, poly);
-        //     poly = poly.pow(n);
-        //     poly += a.try_into().unwrap(); // (x - a)^n + a
-        //     if poly != x_n {return false}
-        // }
-        let n_mod_r = (n%r) as usize;
-        let mut x_n = Poly::with_capacity(n_mod_r, r as usize, n as usize);
-        
-        x_n.set_coef(1, n_mod_r); // x^(n mod r), original paper used x^n
-        println!("{}", x_n);
-        println!("1: x^n: {}", x_n);
-        let r_u = r as usize;
-        let n_u = n as usize;
-        for a in 1..2*r.sqrt()*logn {
-            let mut poly = Poly::new(r_u, n_u);
-            poly += a.try_into().unwrap();
-            poly = poly.mod_pow(n);
-            poly -= a.try_into().unwrap();
-            println!("a = {}: (x-a)^n: {}",a, poly);
-            if poly != x_n {return false}
-        }
-        true
+        aks_theorem::ffi::aks_theorem(n, r, 2*r.sqrt()*logn)
     }
 }

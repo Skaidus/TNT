@@ -15,13 +15,13 @@ pub fn log2_ceil<T: UnsigInt>(k: T) -> u32
     
 }
 
-pub fn nCk<T: UnsigInt>(n : T, k: T) -> T 
+pub fn n_c_k<T: UnsigInt>(n : T, k: T) -> T 
 {
     let mut res = T::one();
     let k = if k > n - k {n-k} else {k};
     for i in range(T::zero(),k){
-        res *= (n - i);
-        res /= (i + T::one());
+        res *= n - i;
+        res /= i + T::one();
     }
     res
 }

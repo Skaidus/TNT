@@ -1,8 +1,3 @@
-
-
-pub mod polynomial;
-pub mod polynomialB;
-pub mod polywrap;
 pub mod number_theory {
     use num::{PrimInt, Unsigned};
     use std::{fmt::Display, ops::{AddAssign, MulAssign, DivAssign, SubAssign}};
@@ -26,6 +21,7 @@ pub mod number_theory {
             pub mod aks_2003;
             pub mod aks_bernstein;
             pub mod aks_2005;
+            mod aks_theorem;
         }
         pub mod naive;
         pub trait PrimalityTest {
