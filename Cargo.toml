@@ -8,7 +8,7 @@ repository = "https://github.com/Skaidus/AKS_Primes"
 readme = "README.md"
 links = "NTL"
 build = "build.rs"
-keywords = ["AKS", "Primality", "Number theory", "Bernstein", "Cryptography"]
+keywords = ["AKS", "Primality", "Mathematics", "Bernstein", "Cryptography"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [profile.release]
