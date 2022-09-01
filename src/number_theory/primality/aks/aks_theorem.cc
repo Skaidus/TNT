@@ -1,4 +1,4 @@
-#include "aks_primes/include/aks_theorem.h"
+#include "tnt-lib/include/aks_theorem.h"
 
 using namespace std;
 using namespace NTL;

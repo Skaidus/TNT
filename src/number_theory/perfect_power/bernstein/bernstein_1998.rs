@@ -246,7 +246,7 @@ impl Bernstein1988 {
     /// Checks whether `n` is a perfect power
     /// # Examples
     /// ```
-    /// use aks_primes::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
+    /// use tnt_lib::number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
     /// let mut pp = vec![
     ///     121, // 11^2
     ///     3125, // 5^5

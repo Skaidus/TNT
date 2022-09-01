@@ -15,5 +15,5 @@ fn main() {
         .flag_if_supported("-std=c++14")
         .flag_if_supported("-Wno-deprecated-copy")
         .flag_if_supported("-Wno-unused-parameter");
-    build.compile("aks_theorem");
+    build.compile("tnt-lib");
 }
