@@ -59,7 +59,7 @@ pub use number_theory::primality::aks::aks_2002::Aks2002;
 pub use number_theory::primality::aks::aks_2003::Aks2003;
 pub use number_theory::primality::naive::Naive;
 pub use number_theory::perfect_power::bernstein::bernstein_1998::Bernstein1988;
-pub use number_theory::primes_less_than::sieve::Sieve;
+//pub use number_theory::primes_less_than::sieve::Sieve;
 pub use number_theory::primes_less_than::naive::NaivePlt;
 pub use number_theory::primes_less_than::PrimesLessThan;
 pub use number_theory::primality::PrimalityTest;
