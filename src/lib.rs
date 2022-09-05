@@ -24,6 +24,14 @@ mod number_theory {
         pub mod naive;
         pub trait PrimalityTest {
             type Int;
+            /// Checks whether `n` is a prime number
+            /// # Examples
+            /// ```
+            /// use tnt_lib::PrimalityTest; // Required Trait.
+            /// use tnt_lib::Naive; // Struct that implements the trait.
+            /// assert!(Naive::is_prime(11));
+            /// assert!(!Naive::is_prime(125));
+            /// ```
             fn is_prime(n : Self::Int) -> bool;
         }
     }
@@ -33,15 +41,14 @@ mod number_theory {
         pub mod naive;
         pub trait PrimesLessThan {
             type Int;
-    /// Return all prime numbers below `n`.
-    /// 1 and `n` do not belong to this list.
-    /// # Examples
-    /// ```
-    /// use tnt_lib::PrimesLessThan; // Required Trait.
-    /// use tnt_lib::NaivePlt; // Struct that implements the trait.
-    /// let expected : Vec<usize> = vec![2,3,5,7];
-    /// assert_eq!(NaivePlt::get_primes(11), expected);
-    /// ```
+            /// Returns all prime numbers in `(1,n)` range
+            /// # Examples
+            /// ```
+            /// use tnt_lib::PrimesLessThan; // Required Trait.
+            /// use tnt_lib::NaivePlt; // Struct that implements the trait.
+            /// let expected : Vec<usize> = vec![2,3,5,7];
+            /// assert_eq!(NaivePlt::get_primes(11), expected);
+            /// ```
             fn get_primes(n : Self::Int) -> Vec<Self::Int>;
         }
     }

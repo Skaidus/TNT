@@ -11,7 +11,7 @@ Here is the list of certificates that TNT provides:
   * [AKS Bernstein](https://cr.yp.to/papers/aks-20030125-retypeset20220327.pdf#page=8) (in progress)
   * [AKS 2005](https://math.dartmouth.edu/~carlp/PDF/complexity12.pdf) (in progress)
 * **Prime Sieves:** returns an ordered list of primes below the input.
-  * [Sieve of Eratosthenes](https://cp-algorithms.com/algebra/sieve-of-eratosthenes.html#implementation)
+  * [Sieve of Eratosthenes](https://cp-algorithms.com/algebra/sieve-of-eratosthenes.html#implementation) (in progress)
   * [Quadratic Sieve of Atkin](https://cr.yp.to/papers/primesieves-20020329-retypeset20220327.pdf) (in progress)
 * **Perfect Power Detection:** mostly algorithms by Daniel J. Bernstein.
   * [Detecting Perfect Powers in Essentially Linear Time](https://www.ams.org/journals/mcom/1998-67-223/S0025-5718-98-00952-1/S0025-5718-98-00952-1.pdf).
