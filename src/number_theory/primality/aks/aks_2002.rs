@@ -49,7 +49,6 @@ pub struct Aks2002 {
 
 impl PrimalityTest for Aks2002 {
     type Int = u32;
-    
     fn is_prime(n : Self::Int) -> bool{
         if n < 3 {return true}
         if n % 2u32 == 0 {return false}

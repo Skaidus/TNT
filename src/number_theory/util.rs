@@ -8,7 +8,7 @@ pub fn log2_floor<T: UnsigInt>(k: T) -> u32
         
     }
 
-// 
+#[allow(dead_code)]
 pub fn log2_ceil<T: UnsigInt>(k: T) -> u32 
 {
     return log2_floor(k-T::one()) + 1
@@ -87,6 +87,7 @@ pub fn umulrem<T: UnsigInt>(x : T, y : T, m : T) -> T{
     (x * y) % m
 }
 // Shortcut for (x * y + a) % m
+#[allow(dead_code)]
 pub fn umuladdrem<T: UnsigInt>(x : T, y : T, a : T, m : T) -> T{
     (x * y + a) % m
 }
@@ -104,42 +105,4 @@ pub fn powm<T: UnsigInt>(n : T, exp : T, m : T) -> T{
         i /= T::two();
     }
     r
-}
-
-// Finds inverse of n (mod m)
-pub fn inv(n : usize, m : usize) -> usize{
-    extended_euclidean(n, m)
-}
-
-use std::mem::swap;
-// Returns u from the extended euclid algorithm
-//https://stackoverflow.com/questions/67097428/is-it-possible-to-implement-the-extended-euclidean-algorithm-with-unsigned-machi
-pub fn extended_euclidean<T: UnsigInt>(a : T, b : T) -> T{
-    let mut r0 = a;
-    let mut r1 = b;
-    let mut s0 = T::one();
-    let mut s1 = T::zero();
-    let mut t0 = T::zero();
-    let mut t1 = T::one();
-    let mut n = 0usize;
-    while r1 > T::zero() {
-        let q = r0 / r1;
-        r0 = if r0 > q*r1 {
-            r0-q*r1
-        } else {
-            q*r1-r0
-        };
-        swap(&mut r0, &mut r1);
-        s0 = s0 + q*s1;
-        swap(&mut s0, &mut s1);
-        t0 = t0 + q*t1;
-        swap(&mut t0, &mut t1);
-        n+=1;
-    }
-    // gcd = r0
-    if n%2 == 0 {
-        s0 = b - s0;
-    }
-    s0
-    
 }
