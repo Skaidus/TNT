@@ -33,7 +33,8 @@ mod number_theory {
         pub mod naive;
         pub trait PrimesLessThan {
             type Int;
-    /// Return all prime numbers below `n`
+    /// Return all prime numbers below `n`.
+    /// 1 and `n` do not belong to this list.
     /// # Examples
     /// ```
     /// use tnt_lib::PrimesLessThan; // Required Trait.
