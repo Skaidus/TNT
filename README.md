@@ -19,8 +19,4 @@ Here is the list of certificates that TNT provides:
 
 ## Usage
 
-TNT uses some GNU libraries, specifically `GMP`, `NTL` and `GF2X`. This crates includes a script that must be run in order to fetch those dependencies:
-
-```bash
-./config.sh
-```
+TNT uses some GNU libraries, specifically [GMP](https://gmplib.org/), [NTL](https://libntl.org/) and [GF2X](https://gitlab.inria.fr/gf2x/gf2x). This crate automatically fetches the latest versions and installs them in the package directory.
