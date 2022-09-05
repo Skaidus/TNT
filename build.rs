@@ -2,7 +2,7 @@ use std::process::Command;
 use std::path::Path;
 fn main() {
     if !Path::new("output").is_dir() {
-        Command::new("./config.sh").spawn().expect("Failed to spawn child process");
+        Command::new("sh").arg("./config.sh").output().unwrap();
     }
     println!("cargo:rerun-if-changed=src/lib.rs");
     println!("cargo:rerun-if-changed=include/aks_theorem.h");
